@@ -9,7 +9,7 @@ export const BookRepository = AppDataSource.getRepository(Book).extend({
         take: number | null,
         skip: number | null,
         categories: string[] | null,
-        format: string | null,
+        formats: string[] | null,
         namePart: string | null,
         authorPart: string | null,
         sort: string | null,
@@ -20,8 +20,8 @@ export const BookRepository = AppDataSource.getRepository(Book).extend({
         if(query.categories) {
             books = books.filter(b => query.categories.includes(b.category));
         }
-        if(query.format) {
-            books = books.filter(b => b.format === query.format);
+        if(query.formats) {
+            books = books.filter(b => query.formats.includes(b.format));
         }
         if(query.namePart) {
             const namePartLower = query.namePart.toLowerCase();
@@ -55,7 +55,24 @@ export const BookRepository = AppDataSource.getRepository(Book).extend({
                 return books;
         }
     },
-    
+
+    async getBookNameSuggestions(namePart: string) {
+        const books = await _bR.find();
+        const namePartLower = namePart.toLowerCase();
+        const suggestions = books
+            .map(b => b.name)
+            .filter(name => name.toLowerCase().includes(namePartLower));
+        return [...new Set(suggestions)].slice(0, 10);
+    },
+
+    async getBookAuthorSuggestions(namePart: string) {
+        const books = await _bR.find();
+        const namePartLower = namePart.toLowerCase();
+        const suggestions = books
+            .map(b => b.author)
+            .filter(author => author.toLowerCase().includes(namePartLower));
+        return [...new Set(suggestions)].slice(0, 10);
+    },
 
     async getBookById(bookId: number) {
         return await _bR.findOne({
@@ -90,6 +107,26 @@ export const BookRepository = AppDataSource.getRepository(Book).extend({
 
     async updateBook(bookData) {
         return await _bR.save(bookData);
+    },
+
+    async getBookFormats() {
+        const formats =  await _bR
+            .createQueryBuilder("book")
+            .select("DISTINCT(book.format)", "format")
+            .orderBy("book.format", "ASC")
+            .getRawMany();
+            
+        return formats.map(formatObj => formatObj.format);
+    },
+
+    async getBookCategories() {
+        const categories =  await _bR
+            .createQueryBuilder("book")
+            .select("DISTINCT(book.category)", "category")
+            .orderBy("book.category", "ASC")
+            .getRawMany();
+            
+        return categories.map(categoryObj => categoryObj.category);
     },
 
 });

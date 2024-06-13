@@ -1,0 +1,20 @@
+<div class="login-container">
+    <h1>Welcome to Library Managment System</h1>
+    <div class="login-form">
+        <h2>Enter your credentials to sign in</h2>
+        <form (ngSubmit)="login()">
+            <div class="input-group">
+                <input type="email" [(ngModel)]="credentials.email" [ngModelOptions]="{standalone: true}" placeholder="Email Address" required>
+            </div>
+            <div class="input-group">
+                <input type="password" [(ngModel)]="credentials.password"  [ngModelOptions]="{standalone: true}" placeholder="Password" required>
+            </div>
+            <button type="submit">Sign In</button>
+        </form>
+        <div class="options">
+            <span class="forgot-password">Forgot password?</span> <!--To be added-->
+            <span>Don't have an account?</span>
+            <span class="sign-up" (click)="navigateToRegister()">Sign up</span>
+        </div>
+    </div>
+</div>

@@ -353,6 +353,9 @@ export const userLoginSchema = {
                 token: {
                     type: "string"
                 },
+                isAdmin: {
+                    type: "boolean"
+                }
             }
         },
     }

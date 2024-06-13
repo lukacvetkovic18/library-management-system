@@ -1,0 +1,100 @@
+<div class="page-container" [class.sidebar-hidden]="isSidebarHidden">
+    <div class="sidebar"  *ngIf="!isSidebarHidden">
+        <div class="top-items">
+            <h2>LIBRARY MANAGMENT SYSTEM</h2>
+            <button class="hide-sidebar-btn" (click)="toggleSidebar()">
+                <img src="../../assets/arrow.png">
+            </button>
+        </div>
+        <div class="nav-items">
+            <div class="nav-item" (click)="navigateTo('/home')">
+                <img src="../../assets/profile2.png">
+                <span>Profile</span>
+            </div>
+            <div class="nav-item active" (click)="navigateTo('/home')">
+                <img src="../../assets/home2.png">
+                <span>Home</span>
+            </div>
+            <div class="nav-item" (click)="navigateTo('/home')">
+                <img src="../../assets/my_loans.png">
+                <span>My loans</span>
+            </div>
+        </div>
+        <div class="bottom-items">
+            <div class="bottom-item" (click)="navigateTo('/home')">
+                <img src="../../assets/contact.png">
+                <span>Contact us</span>
+            </div>
+            <div class="bottom-item" (click)="navigateTo('/home')">
+                <img src="../../assets/logout.png">
+                <span>Logout</span>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <button class="show-sidebar-btn" *ngIf="isSidebarHidden" (click)="toggleSidebar()">
+            <img src="../../assets/arrow.png">
+        </button>
+        <div class="header" [class.shrink]="isScrolled">
+            <div class="transbox">
+                <h1>HI {{user.firstName.toUpperCase()}}, EXPLORE THE VAST WORLD OF BOOKS</h1>
+                <div class="search-options">
+                    <div class="input-group name-input-group">
+                        <input type="text" placeholder="Search by book name" [(ngModel)]="nameQuery" (input)="getBookSuggestions(nameQuery)" (focus)="isNameInputFocused = true">
+                        <ul *ngIf="isNameInputFocused && nameSuggestions.length > 0" class="suggestions-list">
+                            <li *ngFor="let suggestion of nameSuggestions" (click)="nameQuery = suggestion; isNameInputFocused = false;">{{ suggestion }}</li>
+                        </ul>
+                    </div>
+                    <div class="input-group author-input-group">
+                        <input type="text" placeholder="Search by author" [(ngModel)]="authorQuery" (input)="getAuthorSuggestions(authorQuery)" (focus)="isAuthorInputFocused = true">
+                        <ul *ngIf="isAuthorInputFocused && authorSuggestions.length > 0" class="suggestions-list">
+                            <li *ngFor="let suggestion of authorSuggestions" (click)="authorQuery = suggestion; isAuthorInputFocused = false;">{{ suggestion }}</li>
+                        </ul>
+                    </div>
+                    <div class="input-group">
+                        <button>Search by formats</button>
+                        <div id="format-dropdown" class="dropdown-content">
+                            <label *ngFor="let format of formats"><input type="checkbox" [value]="format">{{ format }}</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <button>Search by categories</button>
+                        <div id="category-dropdown" class="dropdown-content">
+                            <label *ngFor="let category of categories"><input type="checkbox" [value]="category">{{ category }}</label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <select [(ngModel)]="sort">
+                            <option value="" disabled selected>Sort by</option>
+                            <option value="A-Z">A-Z</option>
+                            <option value="Z-A">Z-A</option>
+                            <option value="Highest price">Highest Price</option>
+                            <option value="Lowest price">Lowest Price</option>
+                            <option value="Highest book_depository_stars">Highest Book Depository Rating</option>
+                            <option value="Lowest book_depository_stars">Lowest Book Depository Rating</option>
+                        </select>
+                    </div>
+                    <button class="search-button" (click)="resetPage(); searchBooks()">Search</button>
+                </div>
+            </div>
+        </div>
+        <div class="book-container">
+            <div *ngFor="let book of books" class="book-item">
+                <img src="./../../assets/{{ book.img_paths }}">
+                <div class="book-details">
+                    <div class="stars-price">
+                        <span class="book-stars">⭐ {{ book.book_depository_stars }}</span>
+                        <span class="book-price">${{ book.price }}</span>
+                    </div>
+                    <span class="book-name">{{ book.name }}</span>
+                    <span class="book-author">by {{ book.author }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="pagination-controls">
+            <button (click)="previousPage()" [disabled]="skip === 0">Back</button>
+            <span>Page {{ pageNumber }}</span>
+            <button (click)="nextPage()">Next</button>
+        </div>
+    </div>
+</div>

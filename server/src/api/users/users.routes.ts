@@ -94,7 +94,8 @@ export default async (fastify, opts) => {
                     role = "Admin";
                 }
                 const token = await fastify.jwt.sign({ id: user.id, role: role })
-                return reply.send({ token: token })
+                console.log("Success")
+                return reply.send({ token: token, isAdmin: user.isAdmin })
             }
         }
     );

@@ -12,6 +12,24 @@ export default async (server) => {
         }
     };
 
+    const getBookNameSuggestions = async (req, reply) => {
+        try {
+            return await bR.getBookNameSuggestions(req.query.namePart);
+        }
+        catch(e){
+            return server.httpErrors.createError(500, e);
+        }
+    };
+
+    const getBookAuthorSuggestions = async (req, reply) => {
+        try {
+            return await bR.getBookAuthorSuggestions(req.query.namePart);
+        }
+        catch(e){
+            return server.httpErrors.createError(500, e);
+        }
+    };
+
     const getBookById = async (req, reply) => {
         try {
             return await bR.getBookById(req.params.bookId);
@@ -48,11 +66,33 @@ export default async (server) => {
         }
     };
 
+    const getBookFormats = async (req, reply) => {
+        try {
+            return await bR.getBookFormats();
+        }
+        catch(e){
+            return server.httpErrors.createError(500, e);
+        }
+    };
+
+    const getBookCategories = async (req, reply) => {
+        try {
+            return await bR.getBookCategories();
+        }
+        catch(e){
+            return server.httpErrors.createError(500, e);
+        }
+    };
+
     return {
         getBooks,
+        getBookNameSuggestions,
+        getBookAuthorSuggestions,
         getBookById,
         addBook,
         removeBook,
-        updateBook
+        updateBook,
+        getBookFormats,
+        getBookCategories
     };
 }

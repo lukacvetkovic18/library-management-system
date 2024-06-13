@@ -1,0 +1,45 @@
+<div class="register-container">
+    <h1>Welcome to Library Managment System</h1>
+    <div class="register-form">
+        <h2>Fill in your information to sign up</h2>
+        <form>
+            <div class="input-group">
+                <span class="required">*</span>
+                <input type="text" [(ngModel)]="user.firstName" [ngModelOptions]="{standalone: true}" placeholder="First Name" required>
+            </div>
+            <div class="input-group">
+                <span class="required">*</span>
+                <input type="text" [(ngModel)]="user.lastName" [ngModelOptions]="{standalone: true}" placeholder="Last Name" required>
+            </div>
+            <div class="input-group">
+                <span class="required">*</span>
+                <input type="text" [(ngModel)]="user.username"  [ngModelOptions]="{standalone: true}" placeholder="Username" required>
+            </div>
+            <div class="input-group">
+                <span class="required">*</span>
+                <input type="email" [(ngModel)]="user.email"  [ngModelOptions]="{standalone: true}" placeholder="Email Address" required>
+            </div>
+            <div class="input-group">
+                <span class="required">*</span>
+                <input type="password" [(ngModel)]="user.password"  [ngModelOptions]="{standalone: true}" placeholder="Password" required>
+            </div>
+            <div class="input-group">
+                <span class="required">*</span>
+                <input type="password" [(ngModel)]="confirmPassword"  [ngModelOptions]="{standalone: true}" placeholder="Confirm Password" required>
+            </div>
+            <div class="input-group">
+                <span class="required"> </span>
+                <input type="text" [(ngModel)]="user.phone"  [ngModelOptions]="{standalone: true}" placeholder="Phone Number">
+            </div>
+            <div class="input-group">
+                <span class="required"> </span>
+                <input type="text" [(ngModel)]="user.address"  [ngModelOptions]="{standalone: true}" placeholder="Address">
+            </div>
+        </form>
+        <button type="submit" (click)="register()">Sign Up</button>
+        <div class="options">
+            <span>Already have an account?</span>
+            <span class="sign-in" (click)="navigateToLogin()">Sign in</span>
+        </div>
+    </div>
+</div>

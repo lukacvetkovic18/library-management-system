@@ -16,8 +16,11 @@ export const getBooksSchema = {
                     type: "string"
                 }
             },
-            format: {
-                type: "string"
+            formats: {
+                type: "array",
+                items: {
+                    type: "string"
+                }
             },
             namePart: {
                 type: "string"
@@ -74,6 +77,28 @@ export const getBooksSchema = {
         }
     }
 }
+
+export const getBookSuggestionsSchema = {
+    tags: ["books"],
+    summary: "Returns book suggestions based on partial input.",
+    query: {
+        type: "object",
+        properties: {
+            namePart: {
+                type: "string"
+            }
+        },
+    },
+    response: {
+        200: {
+            type: "array",
+            items: {
+                type: "string"
+            }
+        }
+    }
+}
+
 
 export const getBookByIdSchema = {
     tags: ["books"],
@@ -305,5 +330,18 @@ export const updateBookSchema = {
                 },
             }
         },
+    }
+}
+
+export const getBookAttributesSchema = {
+    tags: ["books"],
+    summary: "Returns all unique attributes of books from the database.",
+    response: {
+        200: {
+            type: "array",
+            items: {
+                type: "string",
+            }
+        }
     }
 }

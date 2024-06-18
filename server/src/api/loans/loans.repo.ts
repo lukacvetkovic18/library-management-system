@@ -55,10 +55,12 @@ export const LoanRepository = AppDataSource.getRepository(Loan).extend({
         if(existingLoan !== null) {
             throw new Error("Loan for that user and book already exists.");
         }
-        const user = await _uR.findOne({ where: { id: loanData.userId }});
+        let user = await _uR.findOne({ where: { id: loanData.userId }});
         let book = await _bR.findOne({ where: { id: loanData.bookId }});
         book.availableCopies--;
         await _bR.save(book);
+        user.loansLeft--;
+        await _uR.save(user);
 
         return await _lR.save(_lR.create({
             user: user,
@@ -92,17 +94,21 @@ export const LoanRepository = AppDataSource.getRepository(Loan).extend({
         let loan = await _lR.findOne({
             relations: {
                 book: true,
+                user: true
             },
             where: {
                 id: loanId
             }});
         let book = await _bR.findOne({ where: { id: loan.book.id }})
+        let user = await _uR.findOne({ where: { id: loan.user.id }})
         if(loanStatus === "completed") {
             loan.returnDate = new Date().getTime();
         }
         if(loanStatus === "completed" || loanStatus === "canceled") {
             book.availableCopies++;
+            user.loansLeft++;
             await _bR.save(book);
+            await _bR.save(user);
         }
         loan.loanStatus = loanStatus;
         return await _lR.save(loan);
@@ -153,7 +159,7 @@ export const LoanRepository = AppDataSource.getRepository(Loan).extend({
         if(existingLoan !== null) {
             throw new Error("Loan for that user and book already exists.");
         }
-        const user = await _uR.findOne({ where: { id: userId }});
+        let user = await _uR.findOne({ where: { id: userId }});
         let book = await _bR.findOne({ where: { id: bookId }});
 
         const issueDate = new Date();
@@ -162,6 +168,8 @@ export const LoanRepository = AppDataSource.getRepository(Loan).extend({
         
         book.availableCopies--;
         await _bR.save(book);
+        user.loansLeft--;
+        await _uR.save(user);
 
         return await _lR.save(_lR.create({
             user: user,
@@ -169,6 +177,37 @@ export const LoanRepository = AppDataSource.getRepository(Loan).extend({
             issueDate: issueDate.getTime(),
             dueDate: dueDate.getTime()
         }));
+    },
+
+    async canLoanBook(userId: number, bookId: number) {
+        const loan = await _lR.findOne({
+            where: {
+                user: {
+                    id: userId
+                },
+                book: {
+                    id: bookId
+                },
+                loanStatus: LoanStatus.ACTIVE
+            }
+        });
+        if (loan) {
+            return {
+                flag: false, 
+                message: "You already have an active loan for this book."
+            };
+        }
+        const user = await _uR.findOne({ where: { id: userId }});
+        if (user.loansLeft <= 0) {
+            return {
+                flag: false, 
+                message: "You can't loan more than 3 books at the time."
+            };
+        }
+        return {
+            flag: true, 
+            message: "You can loan the book."
+        };
     },
 
 });

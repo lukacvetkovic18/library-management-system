@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany } from "typeorm"
 import { Loan } from "../loans/loans.entity";
+import { Review } from "../reviews/reviews.entity";
 
 @Entity()
 export class Book extends BaseEntity {
@@ -9,8 +10,8 @@ export class Book extends BaseEntity {
     @OneToMany(() => Loan, (loan) => loan.book, { cascade: true })
     loans: Loan[];
 
-    // @OneToMany(() => Review, (review) => review.book, { cascade: true })
-    // reviews: Review[];
+    @OneToMany(() => Review, (review) => review.book, { cascade: true })
+    reviews: Review[];
 
     @Column("varchar")
     name: string;

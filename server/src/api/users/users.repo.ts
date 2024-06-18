@@ -1,5 +1,6 @@
 import { AppDataSource } from "../../data-source";
 import { User } from "./users.entity";
+import * as bcrypt from "bcryptjs";
 
 const _uR = AppDataSource.getRepository(User);
 
@@ -67,7 +68,10 @@ export const UserRepository = AppDataSource.getRepository(User).extend({
 
     async updateUserInfo(userId: number, data) {
         data.id = userId;
-        return await _uR.save(_uR.create(data));
+        if(data.password) {
+            data.password = await bcrypt.hash(data.password, 10);
+        }
+        return await _uR.save(data);
     },
 
     async updateProfilePicture(userId: number, imagePath: string) {

@@ -1,6 +1,6 @@
 import { AppDataSource } from "../../data-source";
 import loansCtrl from "./loans.ctrl";
-import { addLoanSchema, changeLoanStatusSchema, getAllLoansSchema, getLoanByIdSchema, getUsersLoanByIdSchema, getUsersLoansSchema, loanBookSchema, removeLoanSchema, updateLoanSchema } from "./loans.schema";
+import { addLoanSchema, canLoanBookSchema, changeLoanStatusSchema, getAllLoansSchema, getLoanByIdSchema, getUsersLoanByIdSchema, getUsersLoansSchema, loanBookSchema, removeLoanSchema, updateLoanSchema } from "./loans.schema";
 
 export default async (fastify, opts) => {
     const loanController = loansCtrl(fastify);
@@ -77,6 +77,14 @@ export default async (fastify, opts) => {
         preValidation: fastify.userACL,
         handler: (await loanController).loanBook,
         schema: loanBookSchema
+    });
+
+    fastify.route({
+        method: "GET",
+        url: "/api/loans/canLoan/:bookId",
+        preValidation: fastify.userACL,
+        handler: (await loanController).canLoanBook,
+        schema: canLoanBookSchema
     });
 
 }

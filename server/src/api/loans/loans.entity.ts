@@ -3,10 +3,9 @@ import { User } from "../users/users.entity";
 import { Book } from "../books/books.entity";
 
 export enum LoanStatus {
-    PENDING = 'pending',
     ACTIVE = 'active',
     COMPLETED = 'completed',
-    CANCEL = 'canceled',
+    CANCELED = 'canceled',
     OVERDUE = 'overdue',
 }
 
@@ -33,7 +32,7 @@ export class Loan extends BaseEntity {
     @Column({
         type: 'enum',
         enum: LoanStatus,
-        default: LoanStatus.PENDING,
+        default: LoanStatus.ACTIVE,
     })
     loanStatus: LoanStatus;
 }

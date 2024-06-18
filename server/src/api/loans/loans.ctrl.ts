@@ -86,6 +86,15 @@ export default async (server) => {
         }
     };
 
+    const canLoanBook = async (req, reply) => {
+        try {
+            return await lR.canLoanBook(req.user.id, req.params.bookId);
+        }
+        catch(e){
+            return server.httpErrors.createError(500, e);
+        }
+    };
+
     return {
         getAllLoans,
         getLoanById,
@@ -96,5 +105,6 @@ export default async (server) => {
         getUsersLoans,
         getUsersLoanById,
         loanBook,
+        canLoanBook
     };
 }

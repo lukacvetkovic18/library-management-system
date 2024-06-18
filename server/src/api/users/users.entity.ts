@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, CreateDateColumn, BaseEntity, OneToMany } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, CreateDateColumn, BaseEntity, OneToMany, BeforeUpdate, AfterUpdate } from "typeorm"
 import * as bcrypt from "bcryptjs";
 import { Loan } from "../loans/loans.entity";
+import { Review } from "../reviews/reviews.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -10,8 +11,8 @@ export class User extends BaseEntity {
     @OneToMany(() => Loan, (loan) => loan.user, { cascade: true })
     loans: Loan[];
 
-    // @OneToMany(() => Review, (review) => review.user, { cascade: true })
-    // reviews: Review[];
+    @OneToMany(() => Review, (review) => review.user, { cascade: true })
+    reviews: Review[];
 
     // @OneToMany(() => Notification, (notification) => notification.user, { cascade: true })
     // notifications: Notification[];
@@ -40,11 +41,14 @@ export class User extends BaseEntity {
     @CreateDateColumn()
     registrationDate: Date;
 
-    @Column("varchar", { default: null })
+    @Column("longtext", { default: null })
     imagePath: string;
 
     @Column("boolean", { default: false })
     isAdmin: boolean;
+
+    @Column("int", { default: 3 })
+    loansLeft: number;
 
     @BeforeInsert()
     async hashPassword(){

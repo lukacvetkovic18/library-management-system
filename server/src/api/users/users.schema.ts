@@ -46,6 +46,9 @@ export const getAllUsersSchema = {
                     imagePath: {
                         type: "string"
                     },
+                    loansLeft: {
+                        type: "number"
+                    }
                 }
             }
         },
@@ -94,6 +97,9 @@ export const getUserByIdSchema = {
                 imagePath: {
                     type: "string"
                 },
+                loansLeft: {
+                    type: "number"
+                }
             }
         },
     }
@@ -165,6 +171,9 @@ export const addUserSchema = {
                 imagePath: {
                     type: "string"
                 },
+                loansLeft: {
+                    type: "number"
+                }
             }
         },
     }
@@ -253,6 +262,9 @@ export const updateUserSchema = {
                 imagePath: {
                     type: "string"
                 },
+                loansLeft: {
+                    type: "number"
+                }
             }
         },
     }
@@ -383,6 +395,9 @@ export const getUserInfoSchema = {
                 email: {
                     type: "string"
                 },
+                password: {
+                    type: "string"
+                },
                 phone: {
                     type: "string"
                 },
@@ -395,6 +410,9 @@ export const getUserInfoSchema = {
                 imagePath: {
                     type: "string"
                 },
+                loansLeft: {
+                    type: "number"
+                }
             }
         },
     }
@@ -430,6 +448,12 @@ export const updateUserInfoSchema = {
             username: {
                 type: "string"
             },
+            email: {
+                type: "string"
+            },
+            password: {
+                type: "string"
+            },
             phone: {
                 type: "string"
             },
@@ -454,12 +478,21 @@ export const updateUserInfoSchema = {
                 username: {
                     type: "string"
                 },
+                email: {
+                    type: "string"
+                },
+                password: {
+                    type: "string"
+                },
                 phone: {
                     type: "string"
                 },
                 address: {
                     type: "string"
                 },
+                loansLeft: {
+                    type: "number"
+                }
             }
         },
     }

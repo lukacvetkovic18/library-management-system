@@ -1,7 +1,7 @@
 // Admin routes_________________________________________________________________________________________________________________________________
-export const getAllLoansSchema = {
-    tags: ["loans"],
-    summary: "Returns loans from the database based on pagination settings. If empty, it returns first 50 loans.",
+export const getAllReviewsSchema = {
+    tags: ["reviews"],
+    summary: "Returns reviews from the database based on pagination settings. If empty, it returns first 50 reviews.",
     query: {
         type: "object",
         properties: {
@@ -31,6 +31,9 @@ export const getAllLoansSchema = {
                             username: {
                                 type: "string"
                             },
+                            imagePath: {
+                                type: "string"
+                            },
                         }
                     },
                     book: {
@@ -50,16 +53,13 @@ export const getAllLoansSchema = {
                             }
                         }
                     },
-                    issueDate: {
+                    reviewDate: {
                         type: "number"
                     },
-                    dueDate: {
+                    rating: {
                         type: "number"
                     },
-                    returnDate: {
-                        type: "number"
-                    },
-                    loanStatus: {
+                    comment: {
                         type: "string"
                     },
                 }
@@ -68,13 +68,13 @@ export const getAllLoansSchema = {
     }
 }
 
-export const getLoanByIdSchema = {
-    tags: ["loans"],
-    summary: "Returns specific loan by ID from the database.",
+export const getReviewByIdSchema = {
+    tags: ["reviews"],
+    summary: "Returns specific review by ID from the database.",
     params: {
         type: "object",
         properties: {
-            loanId: {
+            reviewId: {
                 type: "number"
             },
         }
@@ -93,6 +93,9 @@ export const getLoanByIdSchema = {
                             type: "number"
                         },
                         username: {
+                            type: "string"
+                        },
+                        imagePath: {
                             type: "string"
                         },
                     }
@@ -114,16 +117,13 @@ export const getLoanByIdSchema = {
                         }
                     }
                 },
-                issueDate: {
+                reviewDate: {
                     type: "number"
                 },
-                dueDate: {
+                rating: {
                     type: "number"
                 },
-                returnDate: {
-                    type: "number"
-                },
-                loanStatus: {
+                comment: {
                     type: "string"
                 },
             }
@@ -131,9 +131,9 @@ export const getLoanByIdSchema = {
     }
 }
 
-export const addLoanSchema = {
-    tags: ["loans"],
-    summary: "Adds new loan with specified attributes to the database.",
+export const addReviewSchema = {
+    tags: ["reviews"],
+    summary: "Adds new review with specified attributes to the database.",
     body: {
         type: "object",
         properties: {
@@ -143,156 +143,10 @@ export const addLoanSchema = {
             bookId: {
                 type: "number"
             },
-            issueDate: {
+            rating: {
                 type: "number"
             },
-            dueDate: {
-                type: "number"
-            },
-        }
-    },
-    response: {
-        200: {
-            type: "object",
-            properties: {
-                id: {
-                    type: "number"
-                },
-                user: {
-                    type: "object",
-                    properties: {
-                        id: {
-                            type: "number"
-                        },
-                        username: {
-                            type: "string"
-                        },
-                    }
-                },
-                book: {
-                    type: "object",
-                    properties: {
-                        id: {
-                            type: "number"
-                        },
-                        name: {
-                            type: "string"
-                        },
-                    }
-                },
-                issueDate: {
-                    type: "number"
-                },
-                dueDate: {
-                    type: "number"
-                },
-                loanStatus: {
-                    type: "string"
-                },
-            }
-        },
-    }
-}
-
-export const removeLoanSchema = {
-    tags: ["loans"],
-    summary: "Removes specific loan by ID from the database.",
-    params: {
-        type: "object",
-        properties: {
-            loanId: {
-                type: "number"
-            },
-        }
-    },
-    response: {
-        200: {
-            type: "object",
-            properties: {
-                message: {
-                    type: "string"
-                },
-            }
-        },
-    }
-}
-
-export const updateLoanSchema = {
-    tags: ["loans"],
-    summary: "Updates a loan with specified sttributes in the database.",
-    body: {
-        type: "object",
-        properties: {
-            id: {
-                type: "number"
-            },
-            userId: {
-                type: "number"
-            },
-            bookId: {
-                type: "number"
-            },
-            issueDate: {
-                type: "number"
-            },
-            dueDate: {
-                type: "number"
-            },
-        }
-    },
-    response: {
-        200: {
-            type: "object",
-            properties: {
-                id: {
-                    type: "number"
-                },
-                user: {
-                    type: "object",
-                    properties: {
-                        id: {
-                            type: "number"
-                        },
-                        username: {
-                            type: "string"
-                        },
-                    }
-                },
-                book: {
-                    type: "object",
-                    properties: {
-                        id: {
-                            type: "number"
-                        },
-                        name: {
-                            type: "string"
-                        },
-                    }
-                },
-                issueDate: {
-                    type: "number"
-                },
-                dueDate: {
-                    type: "number"
-                },
-                loanStatus: {
-                    type: "string"
-                },
-            }
-        },
-    }
-}
-
-export const changeLoanStatusSchema = {
-    tags: ["loans"],
-    summary: "Updates a status of loan based on given loan ID and loan status.",
-    body: {
-        type: "object",
-        properties: {
-            loanId: {
-                type: "number"
-            },
-            loanStatus: {
+            comment: {
                 type: "string"
             },
         }
@@ -313,120 +167,7 @@ export const changeLoanStatusSchema = {
                         username: {
                             type: "string"
                         },
-                    }
-                },
-                book: {
-                    type: "object",
-                    properties: {
-                        id: {
-                            type: "number"
-                        },
-                        name: {
-                            type: "string"
-                        },
-                    }
-                },
-                issueDate: {
-                    type: "number"
-                },
-                dueDate: {
-                    type: "number"
-                },
-                returnDate: {
-                    type: "number"
-                },
-                loanStatus: {
-                    type: "string"
-                },
-            }
-        },
-    }
-}
-
-// User routes_________________________________________________________________________________________________________________________________
-export const getUsersLoansSchema = {
-    tags: ["loans"],
-    summary: "Returns all loans of logged in user.",
-    response: {
-        200: {
-            type: "array",
-            items: {
-                type: "object",
-                properties: {
-                    id: {
-                        type: "number"
-                    },
-                    user: {
-                        type: "object",
-                        properties: {
-                            id: {
-                                type: "number"
-                            },
-                            username: {
-                                type: "string"
-                            },
-                        }
-                    },
-                    book: {
-                        type: "object",
-                        properties: {
-                            id: {
-                                type: "number"
-                            },
-                            name: {
-                                type: "string"
-                            },
-                            author: {
-                                type: "string"
-                            },
-                            img_paths: {
-                                type: "string"
-                            }
-                        }
-                    },
-                    issueDate: {
-                        type: "number"
-                    },
-                    dueDate: {
-                        type: "number"
-                    },
-                    returnDate: {
-                        type: "number"
-                    },
-                    loanStatus: {
-                        type: "string"
-                    },
-                }
-            }
-        },
-    }
-}
-
-export const getUsersLoanByIdSchema = {
-    tags: ["loans"],
-    summary: "Returns a loan of logged in user by given loan ID.",
-    params: {
-        type: "object",
-        properties: {
-            loanId: {
-                type: "number"
-            },
-        }
-    },
-    response: {
-        200: {
-            type: "object",
-            properties: {
-                id: {
-                    type: "number"
-                },
-                user: {
-                    type: "object",
-                    properties: {
-                        id: {
-                            type: "number"
-                        },
-                        username: {
+                        imagePath: {
                             type: "string"
                         },
                     }
@@ -448,16 +189,13 @@ export const getUsersLoanByIdSchema = {
                         }
                     }
                 },
-                issueDate: {
+                reviewDate: {
                     type: "number"
                 },
-                dueDate: {
+                rating: {
                     type: "number"
                 },
-                returnDate: {
-                    type: "number"
-                },
-                loanStatus: {
+                comment: {
                     type: "string"
                 },
             }
@@ -465,13 +203,170 @@ export const getUsersLoanByIdSchema = {
     }
 }
 
-export const loanBookSchema = {
-    tags: ["loans"],
-    summary: "Adds new loan for a logged in user with specified book ID.",
+export const removeReviewSchema = {
+    tags: ["reviews"],
+    summary: "Removes specific review by ID from the database.",
+    params: {
+        type: "object",
+        properties: {
+            reviewId: {
+                type: "number"
+            },
+        }
+    },
+    response: {
+        200: {
+            type: "object",
+            properties: {
+                message: {
+                    type: "string"
+                },
+            }
+        },
+    }
+}
+
+export const updateReviewSchema = {
+    tags: ["reviews"],
+    summary: "Updates a review with specified sttributes in the database.",
     body: {
         type: "object",
         properties: {
+            id: {
+                type: "number"
+            },
+            userId: {
+                type: "number"
+            },
             bookId: {
+                type: "number"
+            },
+            rating: {
+                type: "number"
+            },
+            comment: {
+                type: "string"
+            },
+        }
+    },
+    response: {
+        200: {
+            type: "object",
+            properties: {
+                id: {
+                    type: "number"
+                },
+                user: {
+                    type: "object",
+                    properties: {
+                        id: {
+                            type: "number"
+                        },
+                        username: {
+                            type: "string"
+                        },
+                        imagePath: {
+                            type: "string"
+                        },
+                    }
+                },
+                book: {
+                    type: "object",
+                    properties: {
+                        id: {
+                            type: "number"
+                        },
+                        name: {
+                            type: "string"
+                        },
+                        author: {
+                            type: "string"
+                        },
+                        img_paths: {
+                            type: "string"
+                        }
+                    }
+                },
+                reviewDate: {
+                    type: "number"
+                },
+                rating: {
+                    type: "number"
+                },
+                comment: {
+                    type: "string"
+                },
+            }
+        },
+    }
+}
+
+// User routes_________________________________________________________________________________________________________________________________
+export const getUsersReviewsSchema = {
+    tags: ["reviews"],
+    summary: "Returns all reviews of logged in user.",
+    response: {
+        200: {
+            type: "array",
+            items: {
+                type: "object",
+                properties: {
+                    id: {
+                        type: "number"
+                    },
+                    user: {
+                        type: "object",
+                        properties: {
+                            id: {
+                                type: "number"
+                            },
+                            username: {
+                                type: "string"
+                            },
+                            imagePath: {
+                                type: "string"
+                            },
+                        }
+                    },
+                    book: {
+                        type: "object",
+                        properties: {
+                            id: {
+                                type: "number"
+                            },
+                            name: {
+                                type: "string"
+                            },
+                            author: {
+                                type: "string"
+                            },
+                            img_paths: {
+                                type: "string"
+                            }
+                        }
+                    },
+                    reviewDate: {
+                        type: "number"
+                    },
+                    rating: {
+                        type: "number"
+                    },
+                    comment: {
+                        type: "string"
+                    },
+                }
+            }
+        },
+    }
+}
+
+export const getUsersReviewByIdSchema = {
+    tags: ["reviews"],
+    summary: "Returns a review of logged in user by given review ID.",
+    params: {
+        type: "object",
+        properties: {
+            reviewId: {
                 type: "number"
             },
         }
@@ -492,6 +387,9 @@ export const loanBookSchema = {
                         username: {
                             type: "string"
                         },
+                        imagePath: {
+                            type: "string"
+                        },
                     }
                 },
                 book: {
@@ -503,15 +401,21 @@ export const loanBookSchema = {
                         name: {
                             type: "string"
                         },
+                        author: {
+                            type: "string"
+                        },
+                        img_paths: {
+                            type: "string"
+                        }
                     }
                 },
-                issueDate: {
+                reviewDate: {
                     type: "number"
                 },
-                dueDate: {
+                rating: {
                     type: "number"
                 },
-                loanStatus: {
+                comment: {
                     type: "string"
                 },
             }
@@ -519,9 +423,239 @@ export const loanBookSchema = {
     }
 }
 
-export const canLoanBookSchema = {
-    tags: ["loans"],
-    summary: "Returns true if user can loan the book with given ID.",
+export const reviewBookSchema = {
+    tags: ["reviews"],
+    summary: "Adds new review for a logged in user with specified book ID.",
+    body: {
+        type: "object",
+        properties: {
+            bookId: {
+                type: "number"
+            },
+            rating: {
+                type: "number"
+            },
+            comment: {
+                type: "string"
+            },
+        }
+    },
+    response: {
+        200: {
+            type: "object",
+            properties: {
+                id: {
+                    type: "number"
+                },
+                user: {
+                    type: "object",
+                    properties: {
+                        id: {
+                            type: "number"
+                        },
+                        username: {
+                            type: "string"
+                        },
+                        imagePath: {
+                            type: "string"
+                        },
+                    }
+                },
+                book: {
+                    type: "object",
+                    properties: {
+                        id: {
+                            type: "number"
+                        },
+                        name: {
+                            type: "string"
+                        },
+                        author: {
+                            type: "string"
+                        },
+                        img_paths: {
+                            type: "string"
+                        }
+                    }
+                },
+                reviewDate: {
+                    type: "number"
+                },
+                rating: {
+                    type: "number"
+                },
+                comment: {
+                    type: "string"
+                },
+            }
+        },
+    }
+}
+
+export const editBookReviewSchema = {
+    tags: ["reviews"],
+    summary: "Updates a review for a logged in user with specified review ID.",
+    body: {
+        type: "object",
+        properties: {
+            id: {
+                type: "number"
+            },
+            reviewDate: {
+                type: "number"
+            },
+            rating: {
+                type: "number"
+            },
+            comment: {
+                type: "string"
+            },
+        }
+    },
+    response: {
+        200: {
+            type: "object",
+            properties: {
+                id: {
+                    type: "number"
+                },
+                user: {
+                    type: "object",
+                    properties: {
+                        id: {
+                            type: "number"
+                        },
+                        username: {
+                            type: "string"
+                        },
+                        imagePath: {
+                            type: "string"
+                        },
+                    }
+                },
+                book: {
+                    type: "object",
+                    properties: {
+                        id: {
+                            type: "number"
+                        },
+                        name: {
+                            type: "string"
+                        },
+                        author: {
+                            type: "string"
+                        },
+                        img_paths: {
+                            type: "string"
+                        }
+                    }
+                },
+                reviewDate: {
+                    type: "number"
+                },
+                rating: {
+                    type: "number"
+                },
+                comment: {
+                    type: "string"
+                },
+            }
+        },
+    }
+}
+
+export const removeBookReviewSchema = {
+    tags: ["reviews"],
+    summary: "Removes review for a logged in user with specified review ID.",
+    params: {
+        type: "object",
+        properties: {
+            reviewId: {
+                type: "number"
+            },
+        }
+    },
+    response: {
+        200: {
+            type: "object",
+            properties: {
+                message: {
+                    type: "string"
+                },
+            }
+        },
+    }
+}
+
+export const getReviewsOfBookSchema = {
+    tags: ["reviews"],
+    summary: "Returns all reviews based on given book ID.",
+    params: {
+        type: "object",
+        properties: {
+            bookId: {
+                type: "number"
+            },
+        }
+    },
+    response: {
+        200: {
+            type: "array",
+            items: {
+                type: "object",
+                properties: {
+                    id: {
+                        type: "number"
+                    },
+                    user: {
+                        type: "object",
+                        properties: {
+                            id: {
+                                type: "number"
+                            },
+                            username: {
+                                type: "string"
+                            },
+                            imagePath: {
+                                type: "string"
+                            },
+                        }
+                    },
+                    book: {
+                        type: "object",
+                        properties: {
+                            id: {
+                                type: "number"
+                            },
+                            name: {
+                                type: "string"
+                            },
+                            author: {
+                                type: "string"
+                            },
+                            img_paths: {
+                                type: "string"
+                            }
+                        }
+                    },
+                    reviewDate: {
+                        type: "number"
+                    },
+                    rating: {
+                        type: "number"
+                    },
+                    comment: {
+                        type: "string"
+                    },
+                }
+            }
+        },
+    }
+}
+
+export const canReviewBookSchema = {
+    tags: ["reviews"],
+    summary: "Returns true if user can review the book with given ID.",
     params: {
         type: "object",
         properties: {

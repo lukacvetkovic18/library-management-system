@@ -10,6 +10,14 @@ import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { BookDetailsComponent } from './book-details/book-details.component';
+import { ProfileComponent } from './profile/profile.component';
+import { MyLoansComponent } from './my-loans/my-loans.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -18,13 +26,21 @@ import { BookDetailsComponent } from './book-details/book-details.component';
     RegisterComponent,
     HomeComponent,
     AdminComponent,
-    BookDetailsComponent
+    BookDetailsComponent,
+    ProfileComponent,
+    MyLoansComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatTooltipModule
   ],
   providers: [
     provideClientHydration()

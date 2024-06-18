@@ -1,0 +1,134 @@
+<div class="page-container" [class.sidebar-hidden]="isSidebarHidden">
+    <div class="sidebar"  *ngIf="!isSidebarHidden">
+        <div class="top-items">
+            <h2>LIBRARY MANAGMENT SYSTEM</h2>
+            <button class="hide-sidebar-btn" (click)="toggleSidebar()">
+                <img src="../../assets/arrow.png">
+            </button>
+        </div>
+        <div class="nav-items">
+            <div class="nav-item active" (click)="navigateTo('/profile')" [class.disabled]="isAnyFieldBeingEdited()">
+                <img src="../../assets/profile2.png">
+                <span>Profile</span>
+            </div>
+            <div class="nav-item" (click)="navigateTo('/home')" [class.disabled]="isAnyFieldBeingEdited()">
+                <img src="../../assets/home2.png">
+                <span>Home</span>
+            </div>
+            <div class="nav-item" (click)="navigateTo('/my-loans')" [class.disabled]="isAnyFieldBeingEdited()">
+                <img src="../../assets/my_loans.png">
+                <span>My Loans</span>
+            </div>
+        </div>
+        <div class="bottom-items">
+            <div class="bottom-item" (click)="navigateTo('/home')" [class.disabled]="isAnyFieldBeingEdited()">
+                <img src="../../assets/contact.png">
+                <span>Contact us</span>
+            </div>
+            <div class="bottom-item" (click)="navigateTo('/home')" [class.disabled]="isAnyFieldBeingEdited()">
+                <img src="../../assets/logout.png">
+                <span>Logout</span>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <button class="show-sidebar-btn" *ngIf="isSidebarHidden" (click)="toggleSidebar()">
+            <img src="../../assets/arrow.png">
+        </button>
+        <div class="header">
+            <h1>PROFILE</h1>
+        </div>
+        <div class="profile-container">
+            <div class="info-container">
+                <div class="img-details">
+                    <img [src]="user.imagePath || './../../assets/blank-profile-picture.webp'" (click)="onProfilePicClick()">
+                    <div class="img-buttons" [class.disabled]="isAnyFieldBeingEdited()">
+                        <label class="custom-file-upload">
+                            <input type="file" #fileInput (change)="onFileSelected($event)">
+                            Change Image
+                        </label>
+                        <button (click)="removeProfilePicture()" *ngIf="user.imagePath">Remove Image</button>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="profile-table">
+                        <div class="table-row" [class.table-row-expanded]="isAnyFieldBeingEdited()" *ngFor="let field of ['firstName', 'lastName', 'username', 'phone', 'address', 'email']">
+                            <span class="table-label">{{ fieldLabels[field] }}:</span>
+                            <span class="table-value" *ngIf="!isEditing[field]">{{ user[field] }}</span>
+                            <input class="table-input" *ngIf="isEditing[field]" [(ngModel)]="user[field]">
+                            <button class="table-button" (click)="isEditing[field] ? saveField(field) : editField(field)" [disabled]="isAnyFieldBeingEdited() && !isEditing[field]">
+                                {{ isEditing[field] ? 'Save' : 'Edit' }}
+                            </button>
+                            <button class="table-button" *ngIf="isEditing[field]" (click)="cancelEdit(field)">
+                              Cancel
+                            </button>
+                        </div>
+                        <div class="table-row password" [class.table-row-expanded]="isAnyFieldBeingEdited()">
+                            <span class="table-label">Password:</span>
+                            <span class="table-value">
+                                <ng-container *ngIf="!isEditingPassword">••••••••</ng-container>
+                                <ng-container *ngIf="isEditingPassword">
+                                    <img src="../../assets/{{ passwordVisible ? 'hide-password.png' : 'show-password.png' }}" (click)="togglePasswordVisibility()">
+                                    <input class="table-input" [type]="passwordVisible ? 'text' : 'password'" placeholder="New Password" [(ngModel)]="newPassword">
+                                </ng-container>
+                            </span>
+                            <button class="table-button" (click)="isEditingPassword ? savePassword() : editPassword()" [disabled]="isAnyFieldBeingEdited() && !isEditingPassword">
+                                {{ isEditingPassword ? 'Save' : 'Edit' }}
+                            </button>
+                            <button class="table-button" *ngIf="isEditingPassword" (click)="cancelEditPassword()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="reviews-container">
+                <span class="reviews-title">MY REVIEWS</span>
+                <div *ngFor="let review of reviews" class="review-item">
+                    <div class="review-details">
+                        <div class="book-segment" (click)="viewBookDetails(review.bookId)">
+                            <img src="./../../assets/{{ review.bookImage }}">
+                            <div>
+                                <span class="book-name">{{ review.bookName }}</span>
+                                <span class="book-author">by {{ review.bookAuthor }}</span>
+                            </div>
+                        </div>
+                        <div class="review-segment">
+                            <div>
+                                <span class="review-rating">⭐ {{ review.rating }}</span>
+                                <span class="review-date">{{ transformDate(review.reviewDate) }}</span>
+                            </div>
+                            <span class="review-comment">{{ review.comment }}</span>
+                        </div>
+                        <div class="button-segment">
+                            <button class="edit-button" (click)="openEditReviewDialog(review)">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #editDialog>
+    <div class="dialog-container">
+      <h2 class="dialog-title">Edit Review</h2>
+      <div class="dialog-content">
+        <mat-form-field>
+          <mat-label>Rating</mat-label>
+          <mat-select [(ngModel)]="selectedReview.rating">
+            <mat-option *ngFor="let rating of ratings" [value]="rating">{{ rating }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Comment</mat-label>
+          <textarea matInput [(ngModel)]="selectedReview.comment"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="dialog-actions">
+        <button class="dialog-button" (click)="onCancel()">Cancel</button>
+        <button class="dialog-button" (click)="onSave()">Save</button>
+        <button class="dialog-button" (click)="onDelete()">Delete</button>
+      </div>
+    </div>
+  </ng-template>

@@ -165,232 +165,80 @@
     font-size: 35px;
 }
 
-.book-container {
+.loan-container {
     background-color: #fff;
     padding: 25px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-direction: column;
-    /* justify-content: space-between; */
-    align-items: center;
-    margin: 20px;
-    margin-top: 0;
-}
-
-.info-container {
-    display: flex;
-    /* justify-content: space-between; */
-    justify-content: center;
-    align-items: center;
-}
-
-.book-container img {
-    height: 400px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.9);
-}
-
-.book-details {
-    max-width: 500px;
-    margin-left: 50px;
-    display: flex;
-    flex-direction: column;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    color: #333;
-}
-
-.book-name {
-    text-wrap: wrap;
-    font-size: 30px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.book-author {
-    font-size: 22px;
-    margin-bottom: 15px;
-}
-
-.stars-price {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 17px;
-    margin-bottom: 30px;
-}
-
-.book-table {
-    width: 100%;
-    font-size: 17px;
-    margin-bottom: 15px;
-}
-
-.table-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: 15px;
-}
-
-.table-label {
-    font-weight: bold;
-}
-
-.table-value {
-    text-align: end;
-}
-
-.buttons {
-    width: 100%;
-    display: flex;
+    /* justify-content: space-between; */
     justify-content: space-evenly;
 }
 
-.buttons button {
-    padding: 10px 20px;
-    background-color: #eb5e55;
-    color: #fef0d5;
-    border: none;
-    cursor: pointer;
-    border-radius: 8px;
-    font-size: 15px;
-}
-
-.buttons button:hover {
-    background-color: #b6443c;
-}
-
-/* REVIEWS _________________________________________________________________________ */
-
-.reviews-container {
+.loan-item {
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-}
-
-.reviews-title {
-    text-align: center;
-    color: #333;
-    font-weight: bold;
-    font-size: 25px;
-    padding: 20px 0;
-}
-
-.review-details {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    border-bottom: 1px solid #ccc;
-}
-
-.user-segment {
-    display: flex;
     align-items: center;
-    width: 20%;
-    margin-right: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fef0d5;
+    margin: 10px;
+    width: 200px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-.user-segment img {
-    height: 90px;
-    width: 90px;
-    margin-right: 20px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
-}
-
-.user-segment span {
-    margin-bottom: 10px;
-    font-size: 17px;
-    font-weight: bold;
-}
-
-.review-segment {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 60%;
-    font-size: 15px;
-    margin-right: 20px;
-}
-
-.review-segment div {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.button-segment {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 10%;
-}
-
-.button-segment button {
-    padding: 10px 20px;
-    background-color: #eb5e55;
-    color: #fef0d5;
-    border: none;
+.loan-item:hover {
+    transform: scale(1.05);
     cursor: pointer;
+    background-color: #d4c4a2;
+}
+
+.loan-item img {
+    height: 300px;
+    width: 200px;
     border-radius: 8px;
-    font-size: 15px;
-    margin: 5px 0;
+    border: 3px solid #333;
 }
 
-.button-segment button:hover {
-    background-color: #b6443c;
-}
-
-.dialog-container {
-    font-family: 'Arial', sans-serif;
-    background-color: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-}
-
-.dialog-title {
-    color: #eb5e55;
-    margin-bottom: 20px;
-    font-size: 24px;
-}
-
-.dialog-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.dialog-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.dialog-button {
-    padding: 10px 20px;
-    background-color: #eb5e55;
-    color: #fef0d5;
-    border: none;
-    cursor: pointer;
-    border-radius: 8px;
-    font-size: 15px;
-    margin-left: 10px;
-}
-
-.dialog-button:hover {
-    background-color: #b6443c;
-}
-
-.mat-form-field {
+.loan-details {
     width: 100%;
-    margin-bottom: 20px;
+    padding-top: 10px;
+    text-align: center;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #ccc;
 }
 
-button[disabled] {
-  cursor: not-allowed;
-  opacity: 0.5;
+.loan-details .loan-name {
+    text-align: center;
+    font-weight: bold;
+    color: #eb5e55;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.loan-details .loan-author {
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.loan-details .loan-label {
+    text-align: center;
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.loan-details .loan-status {
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 10px;
 }

@@ -147,6 +147,8 @@
     background-color: #b6443c;
 }
 
+/* PAGE SETTINGS _________________________________________________________________________ */
+
 .header {
     position: fixed;
     top: 0;
@@ -224,16 +226,16 @@
     max-width: 300px;
     font-size: 15px;
     text-align: start;
-  }
+}
   
-  .suggestions-list li {
+.suggestions-list li {
     padding: 10px;
     cursor: pointer;
-  }
+}
   
-  .suggestions-list li:hover {
+.suggestions-list li:hover {
     background-color: rgb(200, 200, 200);
-  }
+}
 
 .input-group select {
     flex: 1;
@@ -342,7 +344,7 @@
 .book-item:hover {
     transform: scale(1.05);
     cursor: pointer;
-    background-color: #d4c4a2; /* Lighten the background color */
+    background-color: #d4c4a2;
 }
 
 .book-item img {

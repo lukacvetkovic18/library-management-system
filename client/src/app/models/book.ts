@@ -11,15 +11,3 @@ export interface Book {
   totalCopies: number;
   availableCopies: number;
 }
-
-export interface BookCategory {
-  id: number;
-  name: string;
-  isChecked: boolean;
-}
-
-export interface BookFormat {
-  id: number;
-  name: string;
-  isChecked: boolean;
-}

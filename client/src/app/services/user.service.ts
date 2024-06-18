@@ -57,7 +57,7 @@ export class UserService {
   }
 
   addUser(user: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/admin/users`, { user }, { headers: this.headers });
+    return this.http.post<any>(`${this.apiUrl}/admin/users`, user, { headers: this.headers });
   }
 
   removeUser(userId: number): Observable<any> {
@@ -65,7 +65,7 @@ export class UserService {
   }
 
   updateUser(user: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/admin/users`, { user }, { headers: this.headers });
+    return this.http.put<any>(`${this.apiUrl}/admin/users`, user, { headers: this.headers });
   }
 
   // User routes
@@ -78,11 +78,12 @@ export class UserService {
   }
 
   updateUserInfo(user: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/users`, { user }, { headers: this.headers });
+    return this.http.put<any>(`${this.apiUrl}/users`, user , { headers: this.headers });
   }
 
   updateProfilePicture(imagePath: string): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/users`, { imagePath }, { headers: this.headers });
+    console.log(imagePath)
+    return this.http.put<any>(`${this.apiUrl}/users/profilePicture`, {imagePath}, { headers: this.headers });
   }
 
 }

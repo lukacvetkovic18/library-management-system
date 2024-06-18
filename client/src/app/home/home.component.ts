@@ -5,6 +5,7 @@ import { UserService } from '../services/user.service';
 import { BookService } from '../services/book.service';
 import { Router } from '@angular/router';
 import { catchError, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+import { DataTransferService } from '../services/data-transfer.service';
 
 @Component({
   selector: 'app-home',
@@ -34,6 +35,7 @@ export class HomeComponent {
   constructor(
     private userService: UserService,
     private bookService: BookService,
+    private dataTransferService: DataTransferService,
     private router: Router
   ) { }
 
@@ -124,7 +126,7 @@ export class HomeComponent {
   
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    const threshold = 100; // Set threshold for shrinking effect
+    const threshold = 100;
     this.isScrolled = window.scrollY > threshold;
   }
 
@@ -179,5 +181,10 @@ export class HomeComponent {
 
   navigateTo(url: string): void {
     this.router.navigate([url]);
+  }
+
+  viewBookDetails(bookId: number): void {
+    this.dataTransferService.setBookId(bookId);
+    this.router.navigate(['/book-details']);
   }
 }

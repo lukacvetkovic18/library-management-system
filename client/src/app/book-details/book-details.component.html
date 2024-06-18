@@ -1,1 +1,142 @@
-<p>book-details works!</p>
+<div class="page-container" [class.sidebar-hidden]="isSidebarHidden">
+    <div class="sidebar"  *ngIf="!isSidebarHidden">
+        <div class="top-items">
+            <h2>LIBRARY MANAGMENT SYSTEM</h2>
+            <button class="hide-sidebar-btn" (click)="toggleSidebar()">
+                <img src="../../assets/arrow.png">
+            </button>
+        </div>
+        <div class="nav-items">
+            <div class="nav-item" (click)="navigateTo('/profile')">
+                <img src="../../assets/profile2.png">
+                <span>Profile</span>
+            </div>
+            <div class="nav-item" (click)="navigateTo('/home')">
+                <img src="../../assets/home2.png">
+                <span>Home</span>
+            </div>
+            <div class="nav-item" (click)="navigateTo('/my-loans')">
+                <img src="../../assets/my_loans.png">
+                <span>My Loans</span>
+            </div>
+        </div>
+        <div class="bottom-items">
+            <div class="bottom-item" (click)="navigateTo('/home')">
+                <img src="../../assets/contact.png">
+                <span>Contact us</span>
+            </div>
+            <div class="bottom-item" (click)="navigateTo('/home')">
+                <img src="../../assets/logout.png">
+                <span>Logout</span>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <button class="show-sidebar-btn" *ngIf="isSidebarHidden" (click)="toggleSidebar()">
+            <img src="../../assets/arrow.png">
+        </button>
+        <div class="header">
+            <h1>BOOK OVERVIEW</h1>
+        </div>
+        <div class="book-container">
+            <div class="info-container">
+                <img src="./../../assets/{{ book.img_paths }}">
+                <div class="book-details">
+                    <span class="book-name">{{ book.name }}</span>
+                    <span class="book-author">by {{ book.author }}</span>
+                    <div class="stars-price">
+                        <span class="book-stars">⭐ {{ book.book_depository_stars }}</span>
+                        <span class="book-price"><b>Price:</b> ${{ book.price }}</span>
+                    </div>
+                    <div class="book-table">
+                        <div class="table-row">
+                            <span class="table-label">Format:</span>
+                            <span class="table-value">{{ book.format }}</span>
+                        </div>
+                        <div class="table-row">
+                            <span class="table-label">Category:</span>
+                            <span class="table-value">{{ book.category }}</span>
+                        </div>
+                        <div class="table-row">
+                            <span class="table-label">ISBN:</span>
+                            <span class="table-value">{{ book.isbn }}</span>
+                        </div>
+                        <div class="table-row">
+                            <span class="table-label">Available Copies:</span>
+                            <span class="table-value">{{ book.availableCopies }}</span>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button (click)="loanBook()" 
+                                [disabled]="canLoan && !canLoan.flag"
+                                [matTooltip]="canLoan && !canLoan.flag ? canLoan.message : ''">Loan</button>
+                        <button (click)="openReviewDialog()"
+                                [disabled]="canReview && !canReview.flag"
+                                [matTooltip]="canReview && !canReview.flag ? canReview.message : ''">Review</button>
+                    </div>
+                </div>
+            </div>
+            <div class="reviews-container">
+                <span class="reviews-title">REVIEWS</span>
+                <div *ngIf="userReview" class="review-item">
+                    <div class="review-details">
+                        <div class="user-segment">
+                            <img [src]="userReview.userImage || './../../assets/blank-profile-picture.webp'">
+                            <span>{{ userReview.username }}</span>
+                        </div>
+                        <div class="review-segment">
+                            <div>
+                                <span class="review-rating">⭐ {{ userReview.rating }}</span>
+                                <span class="review-date">{{ transformDate(userReview.reviewDate) }}</span>
+                            </div>
+                            <span class="review-comment">{{ userReview.comment }}</span>
+                        </div>
+                        <div class="button-segment">
+                            <button class="edit-button" (click)="openReviewDialog(userReview)">Edit</button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngFor="let review of reviews" class="review-item">
+                    <div class="review-details">
+                        <div class="user-segment">
+                            <img [src]="review.userImage || './../../assets/blank-profile-picture.webp'">
+                            <span>{{ review.username }}</span>
+                        </div>
+                        <div class="review-segment">
+                            <div>
+                                <span class="review-rating">⭐ {{ review.rating }}</span>
+                                <span class="review-date">{{ transformDate(review.reviewDate) }}</span>
+                            </div>
+                            <span class="review-comment">{{ review.comment }}</span>
+                        </div>
+                        <div *ngIf="userReview" class="button-segment">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Dialog -->
+<ng-template #reviewDialog>
+    <div class="dialog-container">
+        <h2 class="dialog-title">{{ selectedReview.id ? 'Edit Review' : 'New Review' }}</h2>
+        <div class="dialog-content">
+            <mat-form-field>
+                <mat-label>Rating</mat-label>
+                <mat-select [(ngModel)]="selectedReview.rating" required>
+                    <mat-option *ngFor="let rating of ratings" [value]="rating">{{ rating }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Comment</mat-label>
+                <textarea matInput [(ngModel)]="selectedReview.comment" required></textarea>
+            </mat-form-field>
+        </div>
+        <div class="dialog-actions">
+            <button class="dialog-button" (click)="cancelReview()">Cancel</button>
+            <button class="dialog-button" (click)="saveReview()">{{ selectedReview.id ? 'Save' : 'Create' }}</button>
+        </div>
+    </div>
+</ng-template>

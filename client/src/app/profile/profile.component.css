@@ -165,14 +165,13 @@
     font-size: 35px;
 }
 
-.book-container {
+.profile-container {
     background-color: #fff;
     padding: 25px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */
     align-items: center;
     margin: 20px;
     margin-top: 0;
@@ -180,18 +179,11 @@
 
 .info-container {
     display: flex;
-    /* justify-content: space-between; */
     justify-content: center;
     align-items: center;
 }
 
-.book-container img {
-    height: 400px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.9);
-}
-
-.book-details {
-    max-width: 500px;
+.profile-details {
     margin-left: 50px;
     display: flex;
     flex-direction: column;
@@ -201,37 +193,22 @@
     color: #333;
 }
 
-.book-name {
-    text-wrap: wrap;
-    font-size: 30px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.book-author {
-    font-size: 22px;
-    margin-bottom: 15px;
-}
-
-.stars-price {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 17px;
-    margin-bottom: 30px;
-}
-
-.book-table {
-    width: 100%;
+.profile-table {
+    /* width: 500px; */
     font-size: 17px;
     margin-bottom: 15px;
 }
 
 .table-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: 15px;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.table-row-expanded {
+    grid-template-columns: 1fr 2fr 1fr 1fr;
 }
 
 .table-label {
@@ -242,13 +219,13 @@
     text-align: end;
 }
 
-.buttons {
-    width: 100%;
+.button-container {
     display: flex;
-    justify-content: space-evenly;
+    align-items: center;
+    justify-content: center;
 }
-
-.buttons button {
+.table-button {
+    margin-left: 30px;
     padding: 10px 20px;
     background-color: #eb5e55;
     color: #fef0d5;
@@ -258,7 +235,86 @@
     font-size: 15px;
 }
 
-.buttons button:hover {
+.table-button:hover .cancel-button:hover {
+    background-color: #b6443c;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+button:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.table-input {
+    justify-self: end;
+    padding: 10px;
+    width: 170px;
+    border: 2px solid #ccc;
+    background-color: white;
+    color: #333;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.table-row.password .table-value{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.table-row.password img{
+    height: 20px;
+    box-shadow: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.img-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.img-details img {
+    height: 300px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.9);
+}
+
+.img-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+}
+
+.img-buttons input[type="file"] {
+    display: none; /* Hide the file input */
+}
+
+.custom-file-upload {
+    padding: 10px 20px;
+    background-color: #eb5e55;
+    color: #fef0d5;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.img-buttons button{
+    padding: 10px 20px;
+    background-color: #eb5e55;
+    color: #fef0d5;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.img-buttons button:hover, .custom-file-upload:hover {
     background-color: #b6443c;
 }
 
@@ -285,31 +341,46 @@
     border-bottom: 1px solid #ccc;
 }
 
-.user-segment {
+.book-segment {
     display: flex;
     align-items: center;
-    width: 20%;
+    width: 30%;
     margin-right: 20px;
 }
 
-.user-segment img {
-    height: 90px;
+.book-segment img {
+    height: 120px;
     width: 90px;
     margin-right: 20px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
 }
 
-.user-segment span {
+.book-segment div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.book-segment .book-name {
     margin-bottom: 10px;
     font-size: 17px;
     font-weight: bold;
+}
+
+.book-segment .book-author {
+    font-size: 15px;
+}
+
+.book-segment:hover {
+    transform: scale(1.05);
+    cursor: pointer;
 }
 
 .review-segment {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 60%;
+    width: 50%;
     font-size: 15px;
     margin-right: 20px;
 }
@@ -349,8 +420,6 @@
     padding: 25px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
 }
 
 .dialog-title {
@@ -388,9 +457,4 @@
 .mat-form-field {
     width: 100%;
     margin-bottom: 20px;
-}
-
-button[disabled] {
-  cursor: not-allowed;
-  opacity: 0.5;
 }

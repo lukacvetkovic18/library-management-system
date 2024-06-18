@@ -10,4 +10,5 @@ export interface User {
     registrationDate: Date;
     imagePath: string | null;
     isAdmin: boolean;
+    loansLeft: number;
   }

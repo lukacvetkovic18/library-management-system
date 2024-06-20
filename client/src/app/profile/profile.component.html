@@ -25,7 +25,7 @@
                 <img src="../../assets/contact.png">
                 <span>Contact us</span>
             </div>
-            <div class="bottom-item" (click)="navigateTo('/home')" [class.disabled]="isAnyFieldBeingEdited()">
+            <div class="bottom-item" (click)="logout()" [class.disabled]="isAnyFieldBeingEdited()">
                 <img src="../../assets/logout.png">
                 <span>Logout</span>
             </div>
@@ -35,6 +35,18 @@
         <button class="show-sidebar-btn" *ngIf="isSidebarHidden" (click)="toggleSidebar()">
             <img src="../../assets/arrow.png">
         </button>
+        <button class="notification-btn" (click)="toggleNotifications()">
+            <img src="../../assets/notification.png">
+            <div *ngIf="unreadNotificationsNumber > 0" class="notification-number">{{ unreadNotificationsNumber }}</div>
+        </button>
+        <div *ngIf="showNotifications" class="notifications-dropdown" id="notificationsDropdown">
+          <ul>
+            <li *ngFor="let notification of notifications" [class.unread]="!notification.isRead" (click)="readNotification(notification.id); openNotificationDialog(notification)">
+                <label>{{ notification.title }}</label>
+            </li>
+          </ul>
+          <span (click)="navigateTo('/notifications')">View all notifications</span>
+        </div>
         <div class="header">
             <h1>PROFILE</h1>
         </div>
@@ -131,4 +143,16 @@
         <button class="dialog-button" (click)="onDelete()">Delete</button>
       </div>
     </div>
+  </ng-template>
+
+  <ng-template #notificationDialog>
+      <div class="dialog-container">
+          <span class="dialog-title">{{ selectedNotification.title }}</span>
+          <div class="dialog-content">
+              <span>{{ selectedNotification.content }}</span>
+          </div>
+          <div class="dialog-actions">
+              <button class="dialog-button" (click)="exitNotification()">Exit</button>
+          </div>
+      </div>
   </ng-template>

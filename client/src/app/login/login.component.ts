@@ -23,9 +23,9 @@ export class LoginComponent {
   }
 
   login(): void {
-    console.log(this.credentials)
     this.userService.login(this.credentials).subscribe({
       next: (response) => {
+        console.log(response)
         localStorage.setItem('token', response.token);
         if(response.isAdmin) {
           this.router.navigate(['/admin']);

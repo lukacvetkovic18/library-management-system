@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, TemplateRef, ViewChild } from '@angular/core';
 import { Book } from '../models/book';
 import { User } from '../models/user';
 import { UserService } from '../services/user.service';
@@ -6,6 +6,9 @@ import { BookService } from '../services/book.service';
 import { Router } from '@angular/router';
 import { catchError, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { DataTransferService } from '../services/data-transfer.service';
+import { NotificationService } from '../services/notification.service';
+import { Notification } from '../models/notification';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +16,8 @@ import { DataTransferService } from '../services/data-transfer.service';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+  @ViewChild('notificationDialog') notificationDialog!: TemplateRef<any>;
+
   user!: User;
   books: Book[] | null = null;
   categories: string[] = [];
@@ -31,12 +36,29 @@ export class HomeComponent {
   isNameInputFocused = false;
   authorSuggestions: string[] = [];
   isAuthorInputFocused = false;
+  notifications: Notification[] = [];
+  showNotifications = false;
+  showNotificationPopup = false;
+  // selectedNotification: Notification | null = null;
+  dialogRef!: MatDialogRef<any>;
+  selectedNotification = {
+    id: 0,
+    userId: 0,
+    username: '',
+    notificationDate: new Date(),
+    title: '',
+    content: '',
+    isRead: false
+  };
+  unreadNotificationsNumber = 0;
 
   constructor(
     private userService: UserService,
     private bookService: BookService,
     private dataTransferService: DataTransferService,
-    private router: Router
+    private notificationService: NotificationService,
+    private router: Router,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -46,9 +68,15 @@ export class HomeComponent {
     this.loadBookFormats();
   }
 
+  logout(): void {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+
   loadUser(): void {
     this.userService.getUserInfo().subscribe((data) => {
       this.user = data;
+      this.loadNotifications();
     })
   }
   
@@ -71,6 +99,13 @@ export class HomeComponent {
     });
   }
 
+  loadNotifications(): void {
+    this.notificationService.getUsersNotifications().subscribe((data) => {
+      this.notifications = data.slice(0, 5);
+      this.unreadNotificationsNumber = data.filter((notification: any) => !notification.isRead).length;
+    });
+  }
+
   setSelectedFormats() {
     var checkboxes = document.querySelectorAll('#format-dropdown input[type="checkbox"]');
     this.selectedFormats = [];
@@ -79,7 +114,6 @@ export class HomeComponent {
         this.selectedFormats.push(checkbox.value);
       }
     });
-    // console.log(this.selectedFormats)
   }
 
   setSelectedCategories() {
@@ -90,7 +124,6 @@ export class HomeComponent {
         this.selectedCategories.push(checkbox.value);
       }
     });
-    // console.log(this.selectedCategories)
   }
   
   searchBooks(): void {
@@ -167,6 +200,8 @@ export class HomeComponent {
     const target = event.target as HTMLElement;
     const isNameInputClicked = !!target.closest('.name-input-group');
     const isAuthorInputClicked = !!target.closest('.author-input-group');
+    const isNotificationsDropdownClicked = !!target.closest('#notificationsDropdown');
+    const isNotificationButtonClicked = !!target.closest('.notification-btn');
     
     if (!isNameInputClicked) {
       this.isNameInputFocused = false;
@@ -177,6 +212,11 @@ export class HomeComponent {
       this.isAuthorInputFocused = false;
       this.authorSuggestions = [];
     }
+
+
+    if (!isNotificationsDropdownClicked && !isNotificationButtonClicked) {
+      this.showNotifications = false;
+    }
   }
 
   navigateTo(url: string): void {
@@ -186,5 +226,36 @@ export class HomeComponent {
   viewBookDetails(bookId: number): void {
     this.dataTransferService.setBookId(bookId);
     this.router.navigate(['/book-details']);
+  }
+
+  toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+  }
+
+  openNotificationDialog(notification: Notification): void {
+    this.selectedNotification = {
+      id: notification.id,
+      userId: notification.userId,
+      username: notification.username,
+      notificationDate: new Date(),
+      title: notification.title,
+      content: notification.content,
+      isRead: notification.isRead
+    };
+    this.showNotifications = false;
+    this.dialogRef = this.dialog.open(this.notificationDialog, {
+      width: 'match-content',
+      maxWidth: '500px'
+    });
+  }
+
+  exitNotification(): void {
+    this.dialogRef.close();
+  }
+
+  readNotification(notificationId: number): void {
+    this.notificationService.readNotification(notificationId).subscribe((data) => {
+      this.loadNotifications();
+    })
   }
 }

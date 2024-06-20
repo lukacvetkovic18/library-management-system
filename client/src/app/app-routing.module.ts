@@ -7,6 +7,8 @@ import { AdminComponent } from './admin/admin.component';
 import { BookDetailsComponent } from './book-details/book-details.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MyLoansComponent } from './my-loans/my-loans.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { ContactComponent } from './contact/contact.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -17,6 +19,8 @@ const routes: Routes = [
   { path: 'book-details', component: BookDetailsComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'my-loans', component: MyLoansComponent },
+  { path: 'notifications', component: NotificationsComponent },
+  { path: 'contact', component: ContactComponent },
 ];
 
 @NgModule({

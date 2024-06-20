@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, HostListener, TemplateRef, ViewChild } from '@angular/core';
 import { User } from '../models/user';
 import { UserService } from '../services/user.service';
 import { BookService } from '../services/book.service';
@@ -7,6 +7,8 @@ import { Review } from '../models/review';
 import { ReviewService } from '../services/review.service';
 import { DataTransferService } from '../services/data-transfer.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotificationService } from '../services/notification.service';
+import { Notification } from '../models/notification';
 
 @Component({
   selector: 'app-profile',
@@ -15,6 +17,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 })
 export class ProfileComponent {
   @ViewChild('editDialog') editDialog!: TemplateRef<any>;
+  @ViewChild('notificationDialog') notificationDialog!: TemplateRef<any>;
 
   user!: any;
   isSidebarHidden = false;
@@ -40,12 +43,26 @@ export class ProfileComponent {
   };
   ratings = [1, 2, 3, 4, 5];
   dialogRef!: MatDialogRef<any>;
+  notifications: Notification[] = [];
+  showNotifications = false;
+  showNotificationPopup = false;
+  selectedNotification = {
+    id: 0,
+    userId: 0,
+    username: '',
+    notificationDate: new Date(),
+    title: '',
+    content: '',
+    isRead: false
+  };
+  unreadNotificationsNumber = 0;
 
   constructor(
     private userService: UserService,
     private bookService: BookService,
     private reviewService: ReviewService,
     private dataTransferService: DataTransferService,
+    private notificationService: NotificationService,
     private router: Router,
     private dialog: MatDialog
   ) { }
@@ -53,6 +70,12 @@ export class ProfileComponent {
   ngOnInit() {
     this.loadUser();
     this.loadReviews();
+    this.loadNotifications();
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 
   loadUser(): void {
@@ -82,6 +105,13 @@ export class ProfileComponent {
         console.error('Error fetching user reviews:', error);
       }
     );
+  }
+
+  loadNotifications(): void {
+    this.notificationService.getUsersNotifications().subscribe((data) => {
+      this.notifications = data.slice(0, 5);
+      this.unreadNotificationsNumber = data.filter((notification: any) => !notification.isRead).length;
+    });
   }
 
   toggleSidebar(): void {
@@ -229,5 +259,47 @@ export class ProfileComponent {
         error => console.error('Error deleting review:', error)
       );
     }
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event): void {
+    const target = event.target as HTMLElement;
+    const isNotificationsDropdownClicked = !!target.closest('#notificationsDropdown');
+    const isNotificationButtonClicked = !!target.closest('.notification-btn');
+
+    if (!isNotificationsDropdownClicked && !isNotificationButtonClicked) {
+      this.showNotifications = false;
+    }
+  }
+
+  toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+  }
+
+  openNotificationDialog(notification: Notification): void {
+    this.selectedNotification = {
+      id: notification.id,
+      userId: notification.userId,
+      username: notification.username,
+      notificationDate: new Date(),
+      title: notification.title,
+      content: notification.content,
+      isRead: notification.isRead
+    };
+    this.showNotifications = false;
+    this.dialogRef = this.dialog.open(this.notificationDialog, {
+      width: 'match-content',
+      maxWidth: '500px'
+    });
+  }
+
+  exitNotification(): void {
+    this.dialogRef.close();
+  }
+
+  readNotification(notificationId: number): void {
+    this.notificationService.readNotification(notificationId).subscribe((data) => {
+      this.loadNotifications();
+    })
   }
 }

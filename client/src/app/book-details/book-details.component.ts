@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, HostListener, TemplateRef, ViewChild } from '@angular/core';
 import { User } from '../models/user';
 import { Book } from '../models/book';
 import { UserService } from '../services/user.service';
@@ -9,6 +9,8 @@ import { LoanService } from '../services/loan.service';
 import { Review } from '../models/review';
 import { ReviewService } from '../services/review.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotificationService } from '../services/notification.service';
+import { Notification } from '../models/notification';
 
 @Component({
   selector: 'app-book-details',
@@ -17,6 +19,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 })
 export class BookDetailsComponent {
   @ViewChild('reviewDialog') reviewDialog!: TemplateRef<any>;
+  @ViewChild('notificationDialog') notificationDialog!: TemplateRef<any>;
 
   user!: User;
   book!: Book;
@@ -34,6 +37,19 @@ export class BookDetailsComponent {
   dialogRef!: MatDialogRef<any>;
   canReview: { flag: boolean, message: string } | null = null;
   canLoan: { flag: boolean, message: string } | null = null;
+  notifications: Notification[] = [];
+  showNotifications = false;
+  showNotificationPopup = false;
+  selectedNotification = {
+    id: 0,
+    userId: 0,
+    username: '',
+    notificationDate: new Date(),
+    title: '',
+    content: '',
+    isRead: false
+  };
+  unreadNotificationsNumber = 0;
 
   constructor(
     private userService: UserService,
@@ -41,6 +57,7 @@ export class BookDetailsComponent {
     private loanService: LoanService,
     private dataTransferService: DataTransferService,
     private reviewService: ReviewService,
+    private notificationService: NotificationService,
     private router: Router,
     private dialog: MatDialog
   ) { }
@@ -49,10 +66,16 @@ export class BookDetailsComponent {
     this.loadUser();
   }
 
+  logout(): void {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+
   loadUser(): void {
     this.userService.getUserInfo().subscribe((data) => {
       this.user = data;
       this.loadBook();
+      this.loadNotifications();
     })
   }
   
@@ -93,6 +116,14 @@ export class BookDetailsComponent {
       }
     );
   }
+
+  loadNotifications(): void {
+    this.notificationService.getUsersNotifications().subscribe((data) => {
+      this.notifications = data.slice(0, 5);
+      this.unreadNotificationsNumber = data.filter((notification: any) => !notification.isRead).length;
+    });
+  }
+
 
   canReviewBook(): void {
     this.reviewService.canReviewBook(this.book.id).subscribe((data) => {
@@ -185,5 +216,47 @@ export class BookDetailsComponent {
 
   cancelReview(): void {
     this.dialogRef.close();
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event): void {
+    const target = event.target as HTMLElement;
+    const isNotificationsDropdownClicked = !!target.closest('#notificationsDropdown');
+    const isNotificationButtonClicked = !!target.closest('.notification-btn');
+
+    if (!isNotificationsDropdownClicked && !isNotificationButtonClicked) {
+      this.showNotifications = false;
+    }
+  }
+
+  toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+  }
+
+  openNotificationDialog(notification: Notification): void {
+    this.selectedNotification = {
+      id: notification.id,
+      userId: notification.userId,
+      username: notification.username,
+      notificationDate: new Date(),
+      title: notification.title,
+      content: notification.content,
+      isRead: notification.isRead
+    };
+    this.showNotifications = false;
+    this.dialogRef = this.dialog.open(this.notificationDialog, {
+      width: 'match-content',
+      maxWidth: '500px'
+    });
+  }
+
+  exitNotification(): void {
+    this.dialogRef.close();
+  }
+
+  readNotification(notificationId: number): void {
+    this.notificationService.readNotification(notificationId).subscribe((data) => {
+      this.loadNotifications();
+    })
   }
 }

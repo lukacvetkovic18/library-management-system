@@ -25,7 +25,7 @@
                 <img src="../../assets/contact.png">
                 <span>Contact us</span>
             </div>
-            <div class="bottom-item" (click)="navigateTo('/home')">
+            <div class="bottom-item" (click)="logout()">
                 <img src="../../assets/logout.png">
                 <span>Logout</span>
             </div>
@@ -35,11 +35,23 @@
         <button class="show-sidebar-btn" *ngIf="isSidebarHidden" (click)="toggleSidebar()">
             <img src="../../assets/arrow.png">
         </button>
+        <button class="notification-btn" (click)="toggleNotifications()">
+            <img src="../../assets/notification.png">
+            <div *ngIf="unreadNotificationsNumber > 0" class="notification-number">{{ unreadNotificationsNumber }}</div>
+        </button>
+        <div *ngIf="showNotifications" class="notifications-dropdown" id="notificationsDropdown">
+          <ul>
+            <li *ngFor="let notification of notifications" [class.unread]="!notification.isRead" (click)="readNotification(notification.id); openNotificationDialog(notification)">
+                <label>{{ notification.title }}</label>
+            </li>
+          </ul>
+          <span (click)="navigateTo('/notifications')">View all notifications</span>
+        </div>
         <div class="header">
             <h1>MY LOANS</h1>
         </div>
         <div class="loan-container">
-            <div *ngFor="let loan of loans" class="loan-item" (click)="viewBookDetails(loan.id)">
+            <div *ngFor="let loan of loans" class="loan-item" (click)="viewBookDetails(loan.bookId)">
                 <img src="./../../assets/{{ loan.img_paths }}">
                 <div class="loan-details">
                     <span class="loan-name">{{ loan.name }}</span>
@@ -53,3 +65,15 @@
         </div>
     </div>
 </div>
+
+<ng-template #notificationDialog>
+    <div class="dialog-container">
+        <span class="dialog-title">{{ selectedNotification.title }}</span>
+        <div class="dialog-content">
+            <span>{{ selectedNotification.content }}</span>
+        </div>
+        <div class="dialog-actions">
+            <button class="dialog-button" (click)="exitNotification()">Exit</button>
+        </div>
+    </div>
+</ng-template>

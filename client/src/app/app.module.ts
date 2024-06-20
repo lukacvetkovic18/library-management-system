@@ -18,6 +18,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { ContactComponent } from './contact/contact.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AdminComponent,
     BookDetailsComponent,
     ProfileComponent,
-    MyLoansComponent
+    MyLoansComponent,
+    NotificationsComponent,
+    ContactComponent
   ],
   imports: [
     BrowserModule,

@@ -1,11 +1,13 @@
 import { AppDataSource } from "../../data-source";
 import { Book } from "../books/books.entity";
+import { Notification } from "../notifications/notifications.entity";
 import { User } from "../users/users.entity";
 import { Loan, LoanStatus } from "./loans.entity";
 
 const _lR = AppDataSource.getRepository(Loan);
 const _uR = AppDataSource.getRepository(User);
 const _bR = AppDataSource.getRepository(Book);
+const _nR = AppDataSource.getRepository(Notification);
 
 export const LoanRepository = AppDataSource.getRepository(Loan).extend({
     
@@ -109,6 +111,12 @@ export const LoanRepository = AppDataSource.getRepository(Loan).extend({
             user.loansLeft++;
             await _bR.save(book);
             await _bR.save(user);
+            await _nR.save(_nR.create({
+                user: user,
+                notificationDate: new Date().getDate(),
+                title: `Loan ${loanStatus}`,
+                content: `Your loan for book ${book.name} has been ${loanStatus}.`
+            }));
         }
         loan.loanStatus = loanStatus;
         return await _lR.save(loan);
@@ -170,6 +178,12 @@ export const LoanRepository = AppDataSource.getRepository(Loan).extend({
         await _bR.save(book);
         user.loansLeft--;
         await _uR.save(user);
+        await _nR.save(_nR.create({
+            user: user,
+            notificationDate: new Date().getDate(),
+            title: `Loan successful`,
+            content: `Your loan for book ${book.name} has been activated. Please return the book to the library in 30 days from now.`
+        }));
 
         return await _lR.save(_lR.create({
             user: user,
@@ -202,6 +216,20 @@ export const LoanRepository = AppDataSource.getRepository(Loan).extend({
             return {
                 flag: false, 
                 message: "You can't loan more than 3 books at the time."
+            };
+        }
+        const overdueLoan = await _lR.findOne({
+            where: {
+                user: {
+                    id: userId
+                },
+                loanStatus: LoanStatus.OVERDUE
+            }
+        });
+        if (overdueLoan) {
+            return {
+                flag: false, 
+                message: "You can't loan a book until you settle overdue loans."
             };
         }
         return {

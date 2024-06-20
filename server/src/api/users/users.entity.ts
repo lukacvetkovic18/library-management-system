@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, CreateDateColumn,
 import * as bcrypt from "bcryptjs";
 import { Loan } from "../loans/loans.entity";
 import { Review } from "../reviews/reviews.entity";
+import { Notification } from "../notifications/notifications.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -14,8 +15,8 @@ export class User extends BaseEntity {
     @OneToMany(() => Review, (review) => review.user, { cascade: true })
     reviews: Review[];
 
-    // @OneToMany(() => Notification, (notification) => notification.user, { cascade: true })
-    // notifications: Notification[];
+    @OneToMany(() => Notification, (notification) => notification.user, { cascade: true })
+    notifications: Notification[];
 
     @Column("varchar")
     firstName: string;

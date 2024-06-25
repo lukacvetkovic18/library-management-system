@@ -17,7 +17,7 @@ export class ReviewService {
   constructor(private http: HttpClient) {}
 
   // Admin routes
-  getAllReviews(skip?: number, take?: number): Observable<any> {
+  getAllReviews(skip?: number, take?: number, usernamePart?: string, bookNamePart?: string, sort?: string): Observable<any> {
     let params = new HttpParams();
 
     if (skip !== undefined) {
@@ -25,6 +25,15 @@ export class ReviewService {
     }
     if (take !== undefined) {
       params = params.append('take', take.toString());
+    }
+    if (usernamePart !== undefined) {
+      params = params.append('usernamePart', usernamePart);
+    }
+    if (bookNamePart !== undefined) {
+      params = params.append('bookNamePart', bookNamePart);
+    }
+    if (sort !== undefined) {
+      params = params.append('sort', sort);
     }
 
     return this.http.get<any>(`${this.apiUrl}/admin/reviews`, { headers: this.headers, params: params });

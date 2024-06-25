@@ -20,6 +20,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ContactComponent } from './contact/contact.component';
+import { AdminLoansComponent } from './admin/admin-loans/admin-loans.component';
+import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
+import { AdminBooksComponent } from './admin/admin-books/admin-books.component';
+import { AdminReviewsComponent } from './admin/admin-reviews/admin-reviews.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,11 @@ import { ContactComponent } from './contact/contact.component';
     ProfileComponent,
     MyLoansComponent,
     NotificationsComponent,
-    ContactComponent
+    ContactComponent,
+    AdminLoansComponent,
+    AdminUsersComponent,
+    AdminBooksComponent,
+    AdminReviewsComponent,
   ],
   imports: [
     BrowserModule,

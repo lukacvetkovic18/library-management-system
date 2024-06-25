@@ -17,7 +17,7 @@ export class LoanService {
   constructor(private http: HttpClient) {}
 
   // Admin routes
-  getAllLoans(skip?: number, take?: number): Observable<any> {
+  getAllLoans(skip?: number, take?: number, namePart?: string, loanStatus?: string, sort?: string): Observable<any> {
     let params = new HttpParams();
 
     if (skip !== undefined) {
@@ -25,6 +25,15 @@ export class LoanService {
     }
     if (take !== undefined) {
       params = params.append('take', take.toString());
+    }
+    if (namePart !== undefined) {
+      params = params.append('namePart', namePart);
+    }
+    if (loanStatus !== undefined) {
+      params = params.append('loanStatus', loanStatus);
+    }
+    if (sort !== undefined) {
+      params = params.append('sort', sort);
     }
 
     return this.http.get<any>(`${this.apiUrl}/admin/loans`, { headers: this.headers, params: params });

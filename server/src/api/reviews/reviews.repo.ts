@@ -12,17 +12,45 @@ const _lR = AppDataSource.getRepository(Loan);
 export const ReviewRepository = AppDataSource.getRepository(Review).extend({
     
     // Admin routes_________________________________________________________________________________________________________________________________
-    async getAllReviews(query) {
+    async getAllReviews(query: {
+        take: number | null,
+        skip: number | null,
+        usernamePart: string | null,
+        bookNamePart: string | null,
+        sort: string | null,
+    }) {
         const take = query.take || 50
         const skip = query.skip || 0
-        return await _rR.find({
+        let reviews = await _rR.find({
             relations: {
                 user: true,
                 book: true
             },
-            take: take,
-            skip: skip
         });
+        
+        if(query.usernamePart) {
+            const usernamePartLower = query.usernamePart.toLowerCase();
+            reviews = reviews.filter(r => r.user.username.toLowerCase().includes(usernamePartLower));
+        }
+        if(query.bookNamePart) {
+            const bookNamePartLower = query.bookNamePart.toLowerCase();
+            reviews = reviews.filter(r => r.book.name.toLowerCase().includes(bookNamePartLower));
+        }
+        if (query.sort) {
+            reviews = this.sortReviews(reviews, query.sort);
+        }
+        return reviews.slice(skip, skip + take);
+    },
+
+    sortReviews(reviews: Review[], sortKey: string): Review[] {
+        switch (sortKey) {
+            case 'Newest Review Date':
+                return reviews.sort((a, b) => b.reviewDate - a.reviewDate);
+            case 'Oldest Review Date':
+                return reviews.sort((a, b) => a.reviewDate - b.reviewDate);
+            default:
+                return reviews;
+        }
     },
 
     async getReviewById(reviewId: number) {

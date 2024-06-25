@@ -74,6 +74,9 @@ export const NotificationRepository = AppDataSource.getRepository(Notification).
                 user: {
                     id: userId
                 } 
+            },
+            order: {
+                notificationDate: 'DESC'
             }
         });
     },

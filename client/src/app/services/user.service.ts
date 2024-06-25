@@ -39,7 +39,7 @@ export class UserService {
   }
 
   // Admin routes
-  getAllUsers(skip?: number, take?: number): Observable<any> {
+  getAllUsers(skip?: number, take?: number, firstNamePart?: string, lastNamePart?: string, usernamePart?: string): Observable<any> {
     let params = new HttpParams();
 
     if (skip !== undefined) {
@@ -47,6 +47,15 @@ export class UserService {
     }
     if (take !== undefined) {
       params = params.append('take', take.toString());
+    }
+    if (firstNamePart !== undefined) {
+      params = params.append('firstNamePart', firstNamePart);
+    }
+    if (lastNamePart !== undefined) {
+      params = params.append('lastNamePart', lastNamePart);
+    }
+    if (usernamePart !== undefined) {
+      params = params.append('usernamePart', usernamePart);
     }
 
     return this.http.get<any>(`${this.apiUrl}/admin/users`, { headers: this.headers, params: params });
@@ -68,6 +77,10 @@ export class UserService {
     return this.http.put<any>(`${this.apiUrl}/admin/users`, user, { headers: this.headers });
   }
 
+  updateUserPassword(user: { id: number, password: string }): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/admin/users/password`, user, { headers: this.headers });
+  }
+
   // User routes
   getUserInfo(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/users`, { headers: this.headers });
@@ -82,8 +95,10 @@ export class UserService {
   }
 
   updateProfilePicture(imagePath: string): Observable<any> {
-    console.log(imagePath)
     return this.http.put<any>(`${this.apiUrl}/users/profilePicture`, {imagePath}, { headers: this.headers });
   }
 
+  contactAdmin(emailData: { subject: string, text: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/users/contact`, emailData, { headers: this.headers });
+  }
 }

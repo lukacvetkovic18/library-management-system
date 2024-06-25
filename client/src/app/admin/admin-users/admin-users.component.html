@@ -1,0 +1,103 @@
+<div class="admin-panel">
+    <nav class="header-main" [class.shrink]="isScrolled">
+      <ul>
+        <li><a routerLink="/admin" routerLinkActive="active">My Profile</a></li>
+        <li><a routerLink="/admin/loans" routerLinkActive="active">Loans</a></li>
+        <li><a class="current" routerLink="/admin/users" routerLinkActive="active">Users</a></li>
+        <li><a routerLink="/admin/books" routerLinkActive="active">Books</a></li>
+        <li><a routerLink="/admin/reviews" routerLinkActive="active">Reviews</a></li>
+      </ul>
+    </nav>
+    <router-outlet></router-outlet>
+    <div class="user-container">
+        <div class="header">
+            <h2 class="user-title">USERS</h2>
+            <div class="search-options">
+                <div class="input-group">
+                    <input type="text" placeholder="Search by first name" [(ngModel)]="firstNameFilter">
+                </div>
+                <div class="input-group">
+                    <input type="text" placeholder="Search by last name" [(ngModel)]="lastNameFilter">
+                </div>
+                <div class="input-group">
+                    <input type="text" placeholder="Search by username" [(ngModel)]="usernameFilter">
+                </div>
+                <button class="search-button" (click)="searchUsers()">Search</button>
+            </div>
+        </div>
+        <div *ngFor="let user of users" class="user-item">
+            <div class="user-details">
+                <div class="user-segment">
+                    <img [src]="user.imagePath || './../../assets/blank-profile-picture.webp'">
+                    <div>
+                        <span class="user-first">{{ user.firstName }}</span>
+                        <span class="user-last">{{ user.lastName }}</span>
+                    </div>
+                </div>
+                <div class="email-segment">
+                    <span class="user-email">Email address: {{ user.email }}</span>
+                    <span class="user-username">Username: {{ user.username }}</span>
+                </div>
+                <div class="button-segment">
+                    <button class="edit-button" (click)="openUserDialog(user)">Edit</button>
+                    <button class="password-button" (click)="openChangePasswordDialog(user)">Change Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-item" (click)="logout()">
+        <img src="../../assets/logout.png">
+        <span>Logout</span>
+    </div>
+</div>
+<ng-template #userEditDialog>
+    <div class="dialog-container">
+        <h2 class="dialog-title">EDIT USER</h2>
+        <div class="dialog-content">
+            <div class="info-container">
+                <div class="img-details">
+                    <img [src]="selectedUser.imagePath || './../../assets/blank-profile-picture.webp'" (click)="onProfilePicClick()">
+                    <div class="img-buttons">
+                        <label class="custom-file-upload">
+                            <input type="file" id="fileInput" (change)="onFileSelected($event)">
+                            Change Image
+                        </label>
+                        <button (click)="removeProfilePicture()" *ngIf="selectedUser.imagePath">Remove Image</button>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="profile-table">
+                        <div class="table-row" *ngFor="let field of ['firstName', 'lastName', 'username', 'phone', 'address', 'email']">
+                            <span class="table-label">{{ fieldLabels[field] }}:</span>
+                            <input class="table-input" [(ngModel)]="selectedUser[field]">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <button class="dialog-button" (click)="dialogRef.close('save')">Save</button>
+                <button class="dialog-button" (click)="dialogRef.close()">Cancel</button>
+                <button class="dialog-button" (click)="dialogRef.close('delete')">Delete</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #changePasswordDialog>
+    <div class="dialog-container">
+        <h2 class="dialog-title">CHANGE PASSWORD</h2>
+        <div class="dialog-content">
+            <div class="profile-details">
+                <div class="table-row">
+                    <span class="table-label">New Password:</span>
+                    <input class="table-input" type="password" [(ngModel)]="newPassword" [type]="passwordVisible ? 'text' : 'password'">
+                    <img src="../../../assets/{{ passwordVisible ? 'hide-password.png' : 'show-password.png' }}" (click)="togglePasswordVisibility()">
+                </div>
+            </div>
+        </div>
+        <div class="dialog-buttons">
+            <button class="dialog-button" (click)="dialogRef.close('save')">Save</button>
+            <button class="dialog-button" (click)="dialogRef.close()">Cancel</button>
+        </div>
+    </div>
+</ng-template>

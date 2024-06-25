@@ -36,6 +36,11 @@ export class NotificationsComponent {
     this.loadNotifications();
   }
 
+  logout(): void {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+
   loadNotifications(): void {
     this.notificationService.getUsersNotifications().subscribe((data) => {
       this.notifications = data;

@@ -535,3 +535,66 @@ button[disabled] {
 .dialog-button:hover {
     background-color: #b6443c;
 }
+
+@media screen and (max-width: 1080px) {
+    .page-container .sidebar {
+        width: 0%;
+        display: none;
+    }
+    
+    .page-container .content {
+        width: 100%;
+        margin-left: 0;
+    }
+    
+    .page-container .header {
+        width: 100%;
+        margin-left: 0;
+    }
+    
+    .show-sidebar-btn {
+        display: none;
+    }
+
+    .input-group, .search-button {
+        margin-top: 10px;
+    }
+
+    .review-details {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .review-details .user-segment {
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
+    .review-details .user-segment img{
+        margin: 0;
+        margin-bottom: 10px;
+    }
+
+    .review-segment {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .review-details div {
+        margin-bottom: 10px;
+    }
+
+    .info-container {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .review-comment {
+        text-align: center;
+    }
+
+    .info-container img {
+        margin-bottom: 20px;
+    }
+}

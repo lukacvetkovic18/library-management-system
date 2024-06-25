@@ -1,1 +1,55 @@
-<p>contact works!</p>
+<div class="page-container" [class.sidebar-hidden]="isSidebarHidden">
+    <div class="sidebar"  *ngIf="!isSidebarHidden">
+        <div class="top-items">
+            <h2>LIBRARY MANAGMENT SYSTEM</h2>
+            <button class="hide-sidebar-btn" (click)="toggleSidebar()">
+                <img src="../../assets/arrow.png">
+            </button>
+        </div>
+        <div class="nav-items">
+            <div class="nav-item" (click)="navigateTo('/profile')">
+                <img src="../../assets/profile2.png">
+                <span>Profile</span>
+            </div>
+            <div class="nav-item" (click)="navigateTo('/home')">
+                <img src="../../assets/home2.png">
+                <span>Home</span>
+            </div>
+            <div class="nav-item" (click)="navigateTo('/my-loans')">
+                <img src="../../assets/my_loans.png">
+                <span>My Loans</span>
+            </div>
+        </div>
+        <div class="bottom-items">
+            <div class="bottom-item active" (click)="navigateTo('/contact')">
+                <img src="../../assets/contact.png">
+                <span>Contact us</span>
+            </div>
+            <div class="bottom-item" (click)="logout()">
+                <img src="../../assets/logout.png">
+                <span>Logout</span>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <button class="show-sidebar-btn" *ngIf="isSidebarHidden" (click)="toggleSidebar()">
+            <img src="../../assets/arrow.png">
+        </button>
+        <div class="header">
+            <h1>CONTACT ADMIN</h1>
+        </div>
+        <div class="data-container">
+            <form (ngSubmit)="sendEmail()">
+              <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" [(ngModel)]="subject" name="subject" required>
+              </div>
+              <div class="form-group">
+                <label for="text">Text</label>
+                <textarea id="text" [(ngModel)]="text" name="text" required></textarea>
+              </div>
+              <button type="submit">Send Email</button>
+            </form>
+        </div>
+    </div>
+</div>

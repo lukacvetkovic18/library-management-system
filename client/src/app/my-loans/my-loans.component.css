@@ -383,3 +383,24 @@
 .dialog-button:hover {
     background-color: #b6443c;
 }
+
+@media screen and (max-width: 1080px) {
+    .page-container .sidebar {
+        width: 0%;
+        display: none;
+    }
+    
+    .page-container .content {
+        width: 100%;
+        margin-left: 0;
+    }
+    
+    .page-container .header {
+        width: 100%;
+        margin-left: 0;
+    }
+    
+    .show-sidebar-btn {
+        display: none;
+    }
+}

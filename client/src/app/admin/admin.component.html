@@ -1,1 +1,64 @@
-<p>admin works!</p>
+<div class="admin-panel">
+  <nav class="header-main" [class.shrink]="isScrolled">
+    <ul>
+      <li><a class="current" routerLink="/admin" routerLinkActive="active">My Profile</a></li>
+      <li><a routerLink="/admin/loans" routerLinkActive="active">Loans</a></li>
+      <li><a routerLink="/admin/users" routerLinkActive="active">Users</a></li>
+      <li><a routerLink="/admin/books" routerLinkActive="active">Books</a></li>
+      <li><a routerLink="/admin/reviews" routerLinkActive="active">Reviews</a></li>
+    </ul>
+  </nav>
+  <router-outlet></router-outlet>
+  <div class="profile-container">
+    <div class="header">
+        <h1>HI {{ user.firstName.toUpperCase() }}, WELCOME TO YOUR ADMIN PANEL</h1>
+    </div>
+    <div class="info-container">
+        <div class="img-details">
+            <img [src]="user.imagePath || './../../assets/blank-profile-picture.webp'" (click)="onProfilePicClick()">
+            <div class="img-buttons" [class.disabled]="isAnyFieldBeingEdited()">
+                <label class="custom-file-upload">
+                    <input type="file" #fileInput (change)="onFileSelected($event)">
+                    Change Image
+                </label>
+                <button (click)="removeProfilePicture()" *ngIf="user.imagePath">Remove Image</button>
+            </div>
+        </div>
+        <div class="profile-details">
+            <div class="profile-table">
+                <div class="table-row" [class.table-row-expanded]="isAnyFieldBeingEdited()" *ngFor="let field of ['firstName', 'lastName', 'username', 'phone', 'address', 'email']">
+                    <span class="table-label">{{ fieldLabels[field] }}:</span>
+                    <span class="table-value" *ngIf="!isEditing[field]">{{ user[field] }}</span>
+                    <input class="table-input" *ngIf="isEditing[field]" [(ngModel)]="user[field]">
+                    <button class="table-button" (click)="isEditing[field] ? saveField(field) : editField(field)" [disabled]="isAnyFieldBeingEdited() && !isEditing[field]">
+                        {{ isEditing[field] ? 'Save' : 'Edit' }}
+                    </button>
+                    <button class="table-button" *ngIf="isEditing[field]" (click)="cancelEdit(field)">
+                      Cancel
+                    </button>
+                </div>
+                <div class="table-row password" [class.table-row-expanded]="isAnyFieldBeingEdited()">
+                    <span class="table-label">Password:</span>
+                    <span class="table-value">
+                        <ng-container *ngIf="!isEditingPassword">••••••••</ng-container>
+                        <ng-container *ngIf="isEditingPassword">
+                            <img src="../../assets/{{ passwordVisible ? 'hide-password.png' : 'show-password.png' }}" (click)="togglePasswordVisibility()">
+                            <input class="table-input" [type]="passwordVisible ? 'text' : 'password'" placeholder="New Password" [(ngModel)]="newPassword">
+                        </ng-container>
+                    </span>
+                    <button class="table-button" (click)="isEditingPassword ? savePassword() : editPassword()" [disabled]="isAnyFieldBeingEdited() && !isEditingPassword">
+                        {{ isEditingPassword ? 'Save' : 'Edit' }}
+                    </button>
+                    <button class="table-button" *ngIf="isEditingPassword" (click)="cancelEditPassword()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="bottom-item" (click)="logout()" [class.disabled]="isAnyFieldBeingEdited()">
+      <img src="../../assets/logout.png">
+      <span>Logout</span>
+  </div>
+</div>

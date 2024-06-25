@@ -1,0 +1,148 @@
+<div class="admin-panel">
+    <nav class="header-main" [class.shrink]="isScrolled">
+      <ul>
+        <li><a routerLink="/admin" routerLinkActive="active">My Profile</a></li>
+        <li><a routerLink="/admin/loans" routerLinkActive="active">Loans</a></li>
+        <li><a routerLink="/admin/users" routerLinkActive="active">Users</a></li>
+        <li><a class="current" routerLink="/admin/books" routerLinkActive="active">Books</a></li>
+        <li><a routerLink="/admin/reviews" routerLinkActive="active">Reviews</a></li>
+      </ul>
+    </nav>
+    <router-outlet></router-outlet>
+    <div class="book-container">
+        <div class="header">
+            <h2 class="book-title">BOOKS</h2>
+            <div class="search-options">
+                <div class="input-group name-input-group">
+                    <input type="text" placeholder="Search by book name" [(ngModel)]="nameQuery" (input)="getBookSuggestions(nameQuery)" (focus)="isNameInputFocused = true">
+                    <ul *ngIf="isNameInputFocused && nameSuggestions.length > 0" class="suggestions-list">
+                        <li *ngFor="let suggestion of nameSuggestions" (click)="nameQuery = suggestion; isNameInputFocused = false;">{{ suggestion }}</li>
+                    </ul>
+                </div>
+                <div class="input-group author-input-group">
+                    <input type="text" placeholder="Search by author" [(ngModel)]="authorQuery" (input)="getAuthorSuggestions(authorQuery)" (focus)="isAuthorInputFocused = true">
+                    <ul *ngIf="isAuthorInputFocused && authorSuggestions.length > 0" class="suggestions-list">
+                        <li *ngFor="let suggestion of authorSuggestions" (click)="authorQuery = suggestion; isAuthorInputFocused = false;">{{ suggestion }}</li>
+                    </ul>
+                </div>
+                <div class="input-group">
+                    <button>Search by formats</button>
+                    <div id="format-dropdown" class="dropdown-content">
+                        <label *ngFor="let format of formats"><input type="checkbox" [value]="format">{{ format }}</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <button>Search by categories</button>
+                    <div id="category-dropdown" class="dropdown-content">
+                        <label *ngFor="let category of categories"><input type="checkbox" [value]="category">{{ category }}</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <select [(ngModel)]="sort">
+                        <option value="" disabled selected>Sort by</option>
+                        <option value="A-Z">A-Z</option>
+                        <option value="Z-A">Z-A</option>
+                        <option value="Highest price">Highest Price</option>
+                        <option value="Lowest price">Lowest Price</option>
+                        <option value="Highest book_depository_stars">Highest Book Depository Rating</option>
+                        <option value="Lowest book_depository_stars">Lowest Book Depository Rating</option>
+                    </select>
+                </div>
+                <button class="search-button" (click)="resetPage(); searchBooks()">Search</button>
+                <button class="add-book-btn" (click)="openBookDialog()">Add new book</button>
+            </div>
+        </div>
+        <div *ngFor="let book of books" class="book-item">
+            <div class="img-segment">
+                <img src="./../../../assets/{{ book.img_paths }}">
+            </div>
+            <div class="main-segment">
+                <span class="book-name">{{ book.name }}</span>
+                <span class="book-author">by {{ book.author }}</span>
+            </div>
+            <div class="stars-price-segment">
+                <span class="book-stars">BDS: ⭐ {{ book.book_depository_stars }}</span>
+                <span class="book-price">Price: ${{ book.price }}</span>
+            </div>
+            <div class="copies-segment">
+                <span class="book-total">Category: {{ book.category }}</span>
+                <span class="book-available">Format: {{ book.format }}</span>
+            </div>
+            <div class="copies-segment">
+                <span class="book-total">Total copies: {{ book.totalCopies }}</span>
+                <span class="book-available">Available copies: {{ book.availableCopies }}</span>
+            </div>
+            <div class="button-segment">
+                <button class="edit-button" (click)="openBookDialog(book)">Edit</button>
+            </div>
+        </div>
+        <div class="pagination-controls">
+            <button (click)="previousPage()" [disabled]="skip === 0">Back</button>
+            <span>Page {{ pageNumber }}</span>
+            <button (click)="nextPage()">Next</button>
+        </div>
+    </div>
+    <div class="bottom-item" (click)="logout()">
+        <img src="../../assets/logout.png">
+        <span>Logout</span>
+    </div>
+</div>
+
+<ng-template #bookDialog>
+    <div class="dialog-container">
+    <h2>{{ isEditMode ? 'EDIT BOOK' : 'ADD NEW BOOK' }}</h2>
+      <form>
+        <mat-form-field *ngIf="!isEditMode" appearance="fill">
+          <mat-label>Image Path</mat-label>
+          <input matInput [(ngModel)]="selectedBook.img_paths" name="img_paths">
+        </mat-form-field>
+        <mat-form-field appearance="fill" [class.mat-form-field-full]="isEditMode">
+          <mat-label>Book Name</mat-label>
+          <input matInput [(ngModel)]="selectedBook.name" name="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Author</mat-label>
+          <input matInput [(ngModel)]="selectedBook.author" name="author">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Format</mat-label>
+          <mat-select [(ngModel)]="selectedBook.format" name="format">
+            <mat-option *ngFor="let format of formats" [value]="format">{{ format }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Stars</mat-label>
+          <input matInput [(ngModel)]="selectedBook.book_depository_stars" name="stars" type="number">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Price</mat-label>
+          <input matInput [(ngModel)]="selectedBook.price" name="price" type="number">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>ISBN</mat-label>
+          <input matInput [(ngModel)]="selectedBook.isbn" name="isbn">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Category</mat-label>
+          <mat-select [(ngModel)]="selectedBook.category" name="category">
+            <mat-option *ngFor="let category of categories" [value]="category">{{ category }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Total Copies</mat-label>
+          <input matInput [(ngModel)]="selectedBook.totalCopies" name="totalCopies" type="number">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Available Copies</mat-label>
+          <input matInput [(ngModel)]="selectedBook.availableCopies" name="availableCopies" type="number">
+        </mat-form-field>
+        <div class="dialog-buttons mat-form-field-full">
+          <button *ngIf="isEditMode" type="button" (click)="saveBook()">Save</button>
+          <button *ngIf="!isEditMode" type="button" (click)="addBook()">Add</button>
+          <button type="button" (click)="dialogRef.close()">Cancel</button>
+          <button *ngIf="isEditMode" type="button" (click)="deleteBook()">Delete</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+  

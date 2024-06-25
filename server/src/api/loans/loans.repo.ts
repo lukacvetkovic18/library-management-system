@@ -12,17 +12,49 @@ const _nR = AppDataSource.getRepository(Notification);
 export const LoanRepository = AppDataSource.getRepository(Loan).extend({
     
     // Admin routes_________________________________________________________________________________________________________________________________
-    async getAllLoans(query) {
+    async getAllLoans(query: {
+        take: number | null,
+        skip: number | null,
+        namePart: string | null,
+        loanStatus: string | null,
+        sort: string | null,
+    }) {
         const take = query.take || 50
         const skip = query.skip || 0
-        return await _lR.find({
+        let loans = await _lR.find({
             relations: {
                 user: true,
                 book: true
             },
-            take: take,
-            skip: skip
         });
+        const statuses = ["overdue", "active", "completed", "canceled"];
+
+        loans.sort((a, b) => {
+            return statuses.indexOf(a.loanStatus) - statuses.indexOf(b.loanStatus);
+        });
+        
+        if(query.namePart) {
+            const namePartLower = query.namePart.toLowerCase();
+            loans = loans.filter(l => l.user.username.toLowerCase().includes(namePartLower));
+        }
+        if(query.loanStatus) {
+            loans = loans.filter(l => query.loanStatus === l.loanStatus);
+        }
+        if (query.sort) {
+            loans = this.sortLoans(loans, query.sort);
+        }
+        return loans.slice(skip, skip + take);
+    },
+
+    sortLoans(loans: Loan[], sortKey: string): Loan[] {
+        switch (sortKey) {
+            case 'Newest Issue Date':
+                return loans.sort((a, b) => b.issueDate - a.issueDate);
+            case 'Oldest Issue Date':
+                return loans.sort((a, b) => a.issueDate - b.issueDate);
+            default:
+                return loans;
+        }
     },
 
     async getLoanById(loanId: number) {
@@ -110,12 +142,20 @@ export const LoanRepository = AppDataSource.getRepository(Loan).extend({
             book.availableCopies++;
             user.loansLeft++;
             await _bR.save(book);
-            await _bR.save(user);
+            await _uR.save(user);
             await _nR.save(_nR.create({
                 user: user,
-                notificationDate: new Date().getDate(),
+                notificationDate: new Date().getTime(),
                 title: `Loan ${loanStatus}`,
                 content: `Your loan for book ${book.name} has been ${loanStatus}.`
+            }));
+        }
+        if(loanStatus === "overdue") {
+            await _nR.save(_nR.create({
+                user: user,
+                notificationDate: new Date().getTime(),
+                title: `Loan marked as ${loanStatus}`,
+                content: `Your loan for book ${book.name} has been marekd as ${loanStatus}. Please contact the administrator to settle overdue costs.`
             }));
         }
         loan.loanStatus = loanStatus;
@@ -133,6 +173,9 @@ export const LoanRepository = AppDataSource.getRepository(Loan).extend({
                 user: {
                     id: userId
                 } 
+            },
+            order: {
+                issueDate: 'DESC'
             }
         });
     },
@@ -180,7 +223,7 @@ export const LoanRepository = AppDataSource.getRepository(Loan).extend({
         await _uR.save(user);
         await _nR.save(_nR.create({
             user: user,
-            notificationDate: new Date().getDate(),
+            notificationDate: new Date().getTime(),
             title: `Loan successful`,
             content: `Your loan for book ${book.name} has been activated. Please return the book to the library in 30 days from now.`
         }));

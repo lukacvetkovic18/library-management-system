@@ -11,6 +11,15 @@ export const getAllLoansSchema = {
             take: {
                 type: "number"
             },
+            namePart: {
+                type: "string"
+            },
+            loanStatus: {
+                type: "string"
+            },
+            sort: {
+                type: "string"
+            },
         }
     },
     response: {

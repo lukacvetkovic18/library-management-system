@@ -39,7 +39,7 @@ export class RegisterComponent {
         localStorage.setItem('token', response.token);
         this.router.navigate(['/home']);
       },
-      error: (error) => console.error('Registration error:', error)
+      error: (error) => alert(error.error.message)
     });
   }
 

@@ -12,6 +12,7 @@
 
 h1 {
     margin-bottom: 50px;
+    text-align: center;
 }
 
 .register-form {
@@ -19,8 +20,8 @@ h1 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 70vh;
-    width: 40%;
+    height: 500px;
+    width: 600px;
     background-color: #fef0d5;
     color: #eb5e55;
     border-radius: 12px;

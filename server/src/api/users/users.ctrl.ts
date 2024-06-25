@@ -49,6 +49,15 @@ export default async (server) => {
         }
     };
 
+    const updateUserPassword = async (req, reply) => {
+        try {
+            return await uR.updateUserPassword(req.body);
+        }
+        catch(e){
+            return server.httpErrors.createError(500, e);
+        }
+    };
+
     // User routes_________________________________________________________________________________________________________________________________
     const getUserInfo = async (req, reply) => {
         try {
@@ -86,6 +95,16 @@ export default async (server) => {
         }
     };
 
+    const contactAdmin = async (req, reply) => {
+        try {
+            const data = await uR.contactAdmin(req.user.id, req.body.subject, req.body.text);
+            console.log(data)
+            return await server.sendMail(data);
+        }
+        catch(e){
+            return server.httpErrors.createError(500, e);
+        }
+    };
 
     return {
         getAllUsers,
@@ -93,9 +112,11 @@ export default async (server) => {
         addUser,
         removeUser,
         updateUser,
+        updateUserPassword,
         getUserInfo,
         selfDeleteUser,
         updateUserInfo,
-        updateProfilePicture
+        updateProfilePicture,
+        contactAdmin
     };
 }

@@ -245,7 +245,6 @@ export class ProfileComponent {
   }
 
   updateReview(review: any): void {
-    review.reviewDate = 
     this.reviewService.editBookReview(review).subscribe(
       () => this.loadReviews(),
       error => console.error('Error updating review:', error)

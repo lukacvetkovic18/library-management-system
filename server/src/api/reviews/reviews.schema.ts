@@ -11,6 +11,15 @@ export const getAllReviewsSchema = {
             take: {
                 type: "number"
             },
+            usernamePart: {
+                type: "string"
+            },
+            bookNamePart: {
+                type: "string"
+            },
+            sort: {
+                type: "string"
+            },
         }
     },
     response: {

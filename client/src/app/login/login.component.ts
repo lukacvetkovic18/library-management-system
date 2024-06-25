@@ -17,7 +17,7 @@ export class LoginComponent {
     private userService: UserService,
     private router: Router
   ) { }
-  
+
   navigateToRegister(): void {
     this.router.navigate(['/register']);
   }
@@ -34,7 +34,7 @@ export class LoginComponent {
           this.router.navigate(['/home']);
         }
       },
-      error: (error) => console.error('Login error:', error)
+      error: (error) => alert(error.error.message)
     });
   }
 

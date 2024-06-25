@@ -1,0 +1,70 @@
+<div class="admin-panel">
+    <nav class="header-main" [class.shrink]="isScrolled">
+      <ul>
+        <li><a routerLink="/admin" routerLinkActive="active">My Profile</a></li>
+        <li><a class="current" routerLink="/admin/loans" routerLinkActive="active">Loans</a></li>
+        <li><a routerLink="/admin/users" routerLinkActive="active">Users</a></li>
+        <li><a routerLink="/admin/books" routerLinkActive="active">Books</a></li>
+        <li><a routerLink="/admin/reviews" routerLinkActive="active">Reviews</a></li>
+      </ul>
+    </nav>
+    <router-outlet></router-outlet>
+    <div class="loan-container">
+        <div class="header">
+            <h2 class="loan-title">LOANS</h2>
+            <div class="search-options">
+                <div class="input-group">
+                    <input type="text" placeholder="Search by username" [(ngModel)]="usernameFilter">
+                </div>
+                <div class="input-group">
+                    <select [(ngModel)]="sort">
+                        <option value="" disabled selected>Sort by</option>
+                        <option value="Newest Issue Date">Newest Issue Date</option>
+                        <option value="Oldest Issue Date">Oldest Issue Date</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <select [(ngModel)]="loanStatusFilter">
+                        <option value="" selected>All</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                        <option value="canceled">Canceled</option>
+                        <option value="overdue">Overdue</option>
+                    </select>
+                </div>
+                <button class="search-button" (click)="searchLoans()">Search</button>
+            </div>
+        </div>
+        <div *ngFor="let loan of loans" class="loan-item">
+        <div class="loan-details">
+            <div class="user-segment">
+                <span>Username: {{ loan.username }}</span>
+            </div>
+            <div class="book-segment">
+                <img src="./../../assets/{{ loan.img_paths }}">
+                <div>
+                    <span class="book-name">{{ loan.name }}</span>
+                    <span class="book-author">by {{ loan.author }}</span>
+                </div>
+            </div>
+            <div class="loan-segment">
+                <div>
+                    <span class="loan-issue">Issue Date: {{ transformDate(loan.issueDate) }}</span>
+                    <span *ngIf="loan.loanStatus !== 'canceled'" class="loan-due">{{ loan.loanStatus !== "completed" ? "Due Date: " : "Return Date: " }}{{ loan.loanStatus !== "completed" ? transformDate(loan.dueDate) : transformDate(loan.returnDate!) }}</span>
+                </div>
+                <span class="loan-status" [style.color]="getStatusColor(loan.loanStatus)">{{ loan.loanStatus.toUpperCase() }}</span>
+                <span *ngIf="shouldMarkAsOverdue(loan)" class="overdue-text">Loan's due date has passed, please mark it as overdue or completed.</span>
+            </div>
+            <div class="button-segment">
+                <button *ngIf="loan.loanStatus === 'active' || loan.loanStatus === 'overdue'" class="edit-button" (click)="changeLoanStatus(loan.id, 'completed')">Complete</button>
+                <button *ngIf="loan.loanStatus === 'active'" class="edit-button" (click)="changeLoanStatus(loan.id, 'overdue')">Overdue</button>
+                <button *ngIf="loan.loanStatus === 'active'" class="edit-button" (click)="changeLoanStatus(loan.id, 'canceled')">Cancel</button>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="bottom-item" (click)="logout()">
+        <img src="../../assets/logout.png">
+        <span>Logout</span>
+    </div>
+</div>

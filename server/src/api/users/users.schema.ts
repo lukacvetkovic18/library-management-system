@@ -11,6 +11,15 @@ export const getAllUsersSchema = {
             take: {
                 type: "number"
             },
+            firstNamePart: {
+                type: "string"
+            },
+            lastNamePart: {
+                type: "string"
+            },
+            usernamePart: {
+                type: "string"
+            },
         }
     },
     response: {
@@ -48,6 +57,9 @@ export const getAllUsersSchema = {
                     },
                     loansLeft: {
                         type: "number"
+                    },
+                    isAdmin: {
+                        type: "boolean"
                     }
                 }
             }
@@ -265,6 +277,35 @@ export const updateUserSchema = {
                 loansLeft: {
                     type: "number"
                 }
+            }
+        },
+    }
+}
+
+export const updateUserPasswordSchema = {
+    tags: ["users"],
+    summary: "Updates a user's passowrd based on given ID and password.",
+    body: {
+        type: "object",
+        properties: {
+            id: {
+                type: "number"
+            },
+            password: {
+                type: "string"
+            }
+        }
+    },
+    response: {
+        200: {
+            type: "object",
+            properties: {
+                id: {
+                    type: "number"
+                },
+                password: {
+                    type: "string"
+                },
             }
         },
     }
@@ -519,6 +560,32 @@ export const updateProfilePictureSchema = {
                 imagePath: {
                     type: "string"
                 }
+            }
+        },
+    }
+}
+
+export const contactAdminSchema = {
+    tags: ["users"],
+    summary: "Sends an email to the Admin based on given properties.",
+    body: {
+        type: "object",
+        properties: {
+            subject: {
+                type: "string"
+            },
+            text: {
+                type: "string"
+            }
+        }
+    },
+    response: {
+        200: {
+            type: "object",
+            properties: {
+                message: {
+                    type: "string"
+                },
             }
         },
     }

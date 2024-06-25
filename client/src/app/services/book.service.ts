@@ -69,7 +69,7 @@ export class BookService {
 
   // Admin routes
   addBook(book: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/admin/books`, { book }, { headers: this.headers });
+    return this.http.post<any>(`${this.apiUrl}/admin/books`, book, { headers: this.headers });
   }
 
   removeBook(bookId: number): Observable<any> {
@@ -77,7 +77,7 @@ export class BookService {
   }
 
   updateBook(book: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/admin/books`, { book }, { headers: this.headers });
+    return this.http.put<any>(`${this.apiUrl}/admin/books`, book, { headers: this.headers });
   }
 
   getBookFormats(): Observable<any> {

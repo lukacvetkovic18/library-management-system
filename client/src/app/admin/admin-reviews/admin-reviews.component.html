@@ -1,0 +1,85 @@
+<div class="admin-panel">
+    <nav class="header-main" [class.shrink]="isScrolled">
+      <ul>
+        <li><a routerLink="/admin" routerLinkActive="active">My Profile</a></li>
+        <li><a routerLink="/admin/loans" routerLinkActive="active">Loans</a></li>
+        <li><a routerLink="/admin/users" routerLinkActive="active">Users</a></li>
+        <li><a routerLink="/admin/books" routerLinkActive="active">Books</a></li>
+        <li><a class="current" routerLink="/admin/reviews" routerLinkActive="active">Reviews</a></li>
+      </ul>
+    </nav>
+    <router-outlet></router-outlet>
+    <div class="review-container">
+        <div class="header">
+            <h2 class="review-title">REVIEWS</h2>
+            <div class="search-options">
+                <div class="input-group">
+                    <input type="text" placeholder="Search by username" [(ngModel)]="usernameFilter">
+                </div>
+                <div class="input-group">
+                    <input type="text" placeholder="Search by book name" [(ngModel)]="bookNameFilter">
+                </div>
+                <div class="input-group">
+                    <select [(ngModel)]="sort">
+                        <option value="" disabled selected>Sort by</option>
+                        <option value="Newest Review Date">Newest Review Date</option>
+                        <option value="Oldest Review Date">Oldest Review Date</option>
+                    </select>
+                </div>
+                <button class="search-button" (click)="searchReviews()">Search</button>
+            </div>
+        </div>
+        <div *ngFor="let review of reviews" class="review-item">
+            <div class="review-details">
+                <div class="user-segment">
+                    <span>Username: {{ review.username }}</span>
+                </div>
+                <div class="book-segment">
+                    <img src="./../../assets/{{ review.bookImage }}">
+                    <div>
+                        <span class="book-name">{{ review.bookName }}</span>
+                        <span class="book-author">by {{ review.bookAuthor }}</span>
+                    </div>
+                </div>
+                <div class="review-segment">
+                    <div>
+                        <span class="review-rating">⭐ {{ review.rating }}</span>
+                        <span class="review-date">{{ transformDate(review.reviewDate) }}</span>
+                    </div>
+                    <span class="review-comment">{{ review.comment }}</span>
+                </div>
+                <div class="button-segment">
+                    <button class="edit-button" (click)="openEditReviewDialog(review)">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-item" (click)="logout()">
+        <img src="../../assets/logout.png">
+        <span>Logout</span>
+    </div>
+</div>
+
+
+<ng-template #reviewDialog>
+    <div class="dialog-container">
+        <h2 class="dialog-title">EDIT REVIEW</h2>
+        <div class="dialog-content">
+            <mat-form-field>
+                <mat-label>Rating</mat-label>
+                <mat-select [(ngModel)]="selectedReview.rating">
+                    <mat-option *ngFor="let rating of ratings" [value]="rating">{{ rating }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Comment</mat-label>
+                <textarea matInput [(ngModel)]="selectedReview.comment"></textarea>
+            </mat-form-field>
+        </div>
+        <div class="dialog-actions">
+            <button class="dialog-button" (click)="onCancel()">Cancel</button>
+            <button class="dialog-button" (click)="onSave()">Save</button>
+            <button class="dialog-button" (click)="onDelete()">Delete</button>
+        </div>
+    </div>
+</ng-template>

@@ -1,7 +1,7 @@
 import { AppDataSource } from "../../data-source";
 import usersCtrl from "./users.ctrl";
 import { User } from "./users.entity";
-import { addUserSchema, getAllUsersSchema, getUserByIdSchema, getUserInfoSchema, removeUserSchema, selfDeleteUserSchema, updateProfilePictureSchema, updateUserInfoSchema, updateUserSchema, userLoginSchema, userRegisterSchema } from "./users.schema";
+import { addUserSchema, contactAdminSchema, getAllUsersSchema, getUserByIdSchema, getUserInfoSchema, removeUserSchema, selfDeleteUserSchema, updateProfilePictureSchema, updateUserInfoSchema, updateUserPasswordSchema, updateUserSchema, userLoginSchema, userRegisterSchema } from "./users.schema";
 
 export default async (fastify, opts) => {
     const userController = usersCtrl(fastify);
@@ -48,11 +48,22 @@ export default async (fastify, opts) => {
         schema: updateUserSchema
     });
 
+    fastify.route({
+        method: "PUT",
+        url: "/api/admin/users/password",
+        preValidation: fastify.adminACL,
+        handler: (await userController).updateUserPassword,
+        schema: updateUserPasswordSchema
+    });
+
     // User routes_________________________________________________________________________________________________________________________________
     fastify.post(
         "/api/users/register",
         { schema: userRegisterSchema },
         async (req, reply) => {
+            if(!req.body.firstName || !req.body.lastName || !req.body.username || !req.body.email || !req.body.password) {
+                return reply.code(400).send({ message: "Please fill all the required fields to register!" });
+            }
             if(await userRepo.findOne({ where: { email: req.body.email }})) {
                 return reply.code(400).send({ message: "User with entered email already exits!" });
             }
@@ -130,6 +141,14 @@ export default async (fastify, opts) => {
         preValidation: fastify.userACL,
         handler: (await userController).updateProfilePicture,
         schema: updateProfilePictureSchema
+    });
+
+    fastify.route({
+        method: "POST",
+        url: "/api/users/contact",
+        preValidation: fastify.userACL,
+        handler: (await userController).contactAdmin,
+        schema: contactAdminSchema
     });
 
 }

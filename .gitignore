@@ -1,3 +1,8 @@
 server/.env
 server/node_modules
 server/package-lock.json
+
+/books.csv
+/main_dataset.csv
+/design.png
+/main.py

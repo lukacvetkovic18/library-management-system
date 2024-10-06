@@ -43,5 +43,5 @@ Thumbs.db
 
 
 /src/assets/dataset
-/src/environments
+/src/environments/environment.ts
 /package-lock.json
